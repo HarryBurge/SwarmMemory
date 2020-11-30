@@ -59,6 +59,15 @@ public:
         center.x += dx;
         center.y += dy;
     }
+
+    bool point_in_circle(Coord point) {
+        float dis = sqrt(pow(point.x - center.x, 2) + pow(point.y - center.y, 2));
+
+        if (dis <= r) {
+            return true;
+        }
+        return false;
+    }
 };
 
 

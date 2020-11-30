@@ -1,5 +1,14 @@
-﻿  SwarmMemory.cpp
+﻿  Agent.cpp
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Util.cpp(64,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(11,7): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(12,28): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(13,32): warning C4305: 'argument': truncation from 'double' to 'float'
+  SwarmMemory.cpp
   TBB Warning: tbb.h contains deprecated functionality. For details, please see Deprecated Features appendix in the TBB reference manual.
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
 C:\Users\Burge\Desktop\vcpkg\installed\x86-windows\include\GLFW\glfw3.h(123): message : see previous definition of 'APIENTRY'
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Util.cpp(64,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(76,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(77,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
   SwarmMemory.vcxproj -> C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\Debug\SwarmMemory.exe

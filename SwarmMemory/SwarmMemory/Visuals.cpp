@@ -14,11 +14,6 @@ void render_triangle(Triangle body) {
     glEnd();
 }
 
-void render_agent(Agent* agent) {
-    render_circle(agent->body, 20, 1, 1, 0, true);
-    render_circle(agent->conn_area, 20, 1, 0, 0, false);
-}
-
 void render_circle(Circle body, int num_segments = 20, float r = 1, float g = 1, float b = 1, bool filled = false)
 {
     if (filled) {glBegin(GL_TRIANGLE_FAN);}

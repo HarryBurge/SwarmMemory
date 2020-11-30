@@ -3,6 +3,7 @@
 
 #include "AgentMemory.h"
 #include "Util.cpp"
+#include "Data.h"
 
 class Agent
 {
@@ -18,8 +19,12 @@ class Agent
 		Agent();
 		Agent(int, float, float, float);
 
-		void step();
+		void step(Agent*[], int);
 		void move(float, float);
+		void recieve(Data);
+		void send(Agent* [], int, Data);
+
+		std::string to_string();
 };
 
 #endif

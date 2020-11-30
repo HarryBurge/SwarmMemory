@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClCompile Include="Agent.cpp" />
     <ClCompile Include="AgentMemory.cpp" />
+    <ClCompile Include="Data.cpp" />
     <ClCompile Include="SwarmMemory.cpp" />
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="Visuals.cpp" />
@@ -151,6 +152,7 @@
   <ItemGroup>
     <ClInclude Include="Agent.h" />
     <ClInclude Include="AgentMemory.h" />
+    <ClInclude Include="Data.h" />
     <ClInclude Include="Visuals.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

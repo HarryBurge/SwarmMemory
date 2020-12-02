@@ -40,9 +40,15 @@ Swarm robotics/intelligence/mechanics is becoming an increasingly important area
 Swarm intelligence can be viewed as distributed problem solving\cite{Cognitive maps mine detection, Swarm intellegiegence}, this is ever becoming more and more relevent as computer systems start to level out in terms of indurvidual performance  \cite{CPU speed} and parrelism is inbraced to be able to satisfy the demand of the age of big data \cite{Avalability storage}. 
 Swarm mechanics and robotics are on the rise in industry, as soceitys pace increases and manual labour is automated out, whether its drone delivery to inpatient customers or mapping areas in dangerous zones \cite{Swarm robotics reviewed}.
 
-Another area of swarm robotics research is distributed and local memory of swarm like agents. This area of research has gone down a route more to do with the optimisation of distributed problem solving algorithms rather than practical applications of storage of abstract ideas as a collective. Examples of this is from my understanding there is no research into collective memory on swarm like agents. This research is invaluable due to applications like mapping of dangerous area \cite{Cognitive maps mine detection}, being able to handle loss of agents and collect data on agents with limited memory. An explanation for this to be a less developed area of study is due to subjects like cloud based and raid based storage systems.
+Another area of swarm robotics research is distributed and local memory of swarm like agents. 
+This area of research has gone down a route more to do with the optimisation of distributed problem solving algorithms rather than practical applications of storage of abstract ideas as a collective. 
+Examples of this is from my understanding there is no research into collective memory on swarm like agents. 
+This research is invaluable due to applications like mapping of dangerous area \cite{Cognitive maps mine detection}, being able to handle loss of agents and collect data on agents with limited memory. 
+An explanation for this to be a less developed area of study is due to subjects like cloud based and raid based storage systems.
 
-Storage of data on an ever changing network of storage devices is a hard task to complete, handling loss of connection between diffrent servers, reliability to access of data and handling loss of services whether it be non-correlated or correlated failures \cite{Avalability storage}. This is very applicable to swarm memory handling of data however must be adapted, this is due to current algorthims such as raid not really being designed for highly dynamic systems such as s swarm system. However there are promising papers in this field that suggest approahes that can be adapted with few modifications to be applicable to a swarm based system \cite{Distributed Storage}. 
+Storage of data on an ever changing network of storage devices is a hard task to complete, handling loss of connection between diffrent servers, reliability to access of data and handling loss of services whether it be non-correlated or correlated failures \cite{Avalability storage}. 
+This is very applicable to swarm memory handling of data however must be adapted, this is due to current algorthims such as raid not really being designed for highly dynamic systems such as s swarm system. 
+However there are promising papers in this field that suggest approahes that can be adapted with few modifications to be applicable to a swarm based system \cite{Distributed Storage}. 
 
 The objectives of this report is to merge two diffrent areas of study into one by using diffrent knowledge of each area to create a suitable storage policy for swarm like agents to store collective memorys of abstarct ideas, then to perform analysis on a variety of simulations to explore the capabilitys of said storage policy. 
 
@@ -58,9 +64,23 @@ This chapter will review two areas of relevancy to the project proposed, these a
 \section{Cloud/Backup storage policys/schemes}
 \label{sec:Cloud}
 
-As most things in computer science, this area of study used to be very simple, with small datawarehouses and backups on to medium like magentic tape following something like a grandfather, father, son method. However as the years have progressed, technology has become much more complex requiring larger files of data to be stored and to be accessed frequently leading to the need of more complex backup systems to provide avaliabilty and longevity of data stored. A big component for the complexity of these algortihms other than providing a service better than compettitors is the Legal Services Act. 2007 \cite{LSA}, which makes companies cloud storage solotions to have to be reliable and fast into collection of data for users. 
+As most things in computer science, this area of study used to be very simple, with small datawarehouses and backups on to a medium like magentic tape following something like a grandfather, father, son method. 
+However as the years have progressed, technology has become much more complex requiring larger files of data to be stored and to be accessed frequently leading to the need of more complex backup systems to provide avaliabilty and longevity of data stored.
+A big component for the complexity of these algortihms other than providing a service better than compettitors is the Legal Services Act. 2007 \cite{LSA}, which makes companies cloud storage solotions to have to be reliable and fast into collection of data for users.
+
+Most algorithms used in production are called random replication policys \cite{Avalability storage} where data is partitioned and radomly distributed amoung other storage devices usually on diffrent racks of the datacenter.
+This is an effecicent design policy for handiling non-correlated errors however lacks the robstness against correlated errors.
+These algorithms are good for longer term data storage with average popularity in terms of need for collection of that data.
+
+Some of the problems arisen from random replication policys has spawned a new design policys, of which can handle correlated, non-correlated errors.
+Usually these policys also account for the demand of such item \cite{Avalability storage, Distributed Storage}.
+To tackle these problems two approches have been taken, one is to go from a higher level approcach where you have a sort of manager which chooses which items to replicate and where based of demand and knowledge of other replications \cite{Avalability storage, Patent}, not as suitable in terms of actual data changes but scheme changes of servers \cite{Scheme changes}.
+Working versions of these over a cloud service are tied together sually with "Distributed key-value store"  \cite{Key-Value} where you have these key-value pairs on multiple devices on a network and duplication only leads to more fault tolerance of the data stored.
+
+Another way to handle this which doesn't rely on a more priverliged node or duplicated data, and creates a distributed system is by having 
 
 // TODO: Talk about diffrent types distributed, random repeat things like that 
+// TODO: Say what a correlated and non correlated failure is
 
 \section{Swarm robotics}
 \label{sec:Robotics}
@@ -126,6 +146,15 @@ N. Bonvin, T. G. Papaioannou, and K. Aberer, A Self-Organized, Fault-Tolerant an
 
 \bibitem{LSA}
 Legal Services Act. 2007.
+
+\bibitem{Patent}
+A. Prahlad, M. S. Muller, R. Kottomtharayil, S. Kavuri, P. Gokhale, and M. Vijayan, ‘Cloud gateway system for managing data storage to cloud storage sites’, 20100333116A1, 2010.
+
+\bibitem{Scheme changes}
+B. Czejdo, K. Messa, T. Morzy, M. Morzy, and J. Czejdo, ‘Data Warehouses with Dynamically Changing Schemas and Data Sources’, in Proceedings of the 3rd International Economic Congress, Opportunieties of Change, Sopot, Poland, 2003, p. 10.
+
+\bibitem{Key-Value}
+‘Key-Value Scores Eplained’, HazelCast. [Online]. Available: https://hazelcast.com/glossary/key-value-store/. [Accessed: 02-Dec-2020].
 
 \end{thebibliography}
 

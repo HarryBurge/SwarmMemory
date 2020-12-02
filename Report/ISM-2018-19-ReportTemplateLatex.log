@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.11) (preloaded format=pdflatex 2020.11.23)  1 DEC 2020 17:13
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (MiKTeX 20.11) (preloaded format=pdflatex 2020.11.23)  2 DEC 2020 15:34
 entering extended mode
 **./ISM-2018-19-ReportTemplateLatex.tex
 (ISM-2018-19-ReportTemplateLatex.tex
@@ -550,25 +550,25 @@ Package csquotes Info: Redefining alias 'default' -> 'british'.
 (ISM-2018-19-ReportTemplateLatex.aux)
 \openout1 = `ISM-2018-19-ReportTemplateLatex.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-Package scrbase Info: activating british \contentsname on input line 16.
-Package scrbase Info: activating british \listfigurename on input line 16.
-Package scrbase Info: activating british \listtablename on input line 16.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 18.
+LaTeX Font Info:    ... okay on input line 18.
+Package scrbase Info: activating british \contentsname on input line 18.
+Package scrbase Info: activating british \listfigurename on input line 18.
+Package scrbase Info: activating british \listtablename on input line 18.
 
 (C:\Users\Burge\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
 ii
@@ -600,14 +600,14 @@ G,.JBIG2,.JB2,.eps]
 (grfext)             \AppendGraphicsExtensions on input line 504.
 )
 \big@size=\dimen157
-LaTeX Info: Redefining \microtypecontext on input line 16.
+LaTeX Info: Redefining \microtypecontext on input line 18.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `basictext'.
-LaTeX Info: Redefining \showhyphens on input line 16.
+LaTeX Info: Redefining \showhyphens on input line 18.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -650,7 +650,7 @@ Package microtype Info: Loading generic protrusion settings for font family
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 16.
+Package hyperref Info: Link coloring OFF on input line 18.
 (C:\Users\Burge\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
 Package: nameref 2019/09/16 v2.46 Cross-referencing by name of section
 
@@ -663,9 +663,9 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count285
 )
-LaTeX Info: Redefining \ref on input line 16.
-LaTeX Info: Redefining \pageref on input line 16.
-LaTeX Info: Redefining \nameref on input line 16.
+LaTeX Info: Redefining \ref on input line 18.
+LaTeX Info: Redefining \pageref on input line 18.
+LaTeX Info: Redefining \nameref on input line 18.
  (ISM-2018-19-ReportTemplateLatex.out)
 (ISM-2018-19-ReportTemplateLatex.out)
 \@outlinefile=\write3
@@ -678,7 +678,7 @@ Class scrreprt Info: loading recommended package `bookmark'.
 (scrreprt)           `bookmarkpackage=false' before \begin{document} and
 (scrreprt)           you can avoid this message adding:
 (scrreprt)             \usepackage{bookmark}
-(scrreprt)           before \begin{document} on input line 16.
+(scrreprt)           before \begin{document} on input line 18.
 
 (C:\Users\Burge\AppData\Local\Programs\MiKTeX\tex/latex/bookmark\bookmark.sty
 Package: bookmark 2020-11-06 v1.29 PDF bookmarks (HO)
@@ -691,18 +691,18 @@ File: bkm-pdftex.def 2020-11-06 v1.29 bookmark driver for pdfTeX (HO)
 File: ./UOY-Logo-Stacked-shield-Black.png Graphic file (type png)
 <use ./UOY-Logo-Stacked-shield-Black.png>
 Package pdftex.def Info: ./UOY-Logo-Stacked-shield-Black.png  used on input lin
-e 18.
+e 20.
 (pdftex.def)             Requested size: 156.67627pt x 72.26999pt.
 LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 13.67995pt on input line 18.
+(Font)              scaled to size 13.67995pt on input line 20.
 LaTeX Font Info:    Font shape `T1/phv/b/n' will be
-(Font)              scaled to size 11.39996pt on input line 18.
+(Font)              scaled to size 11.39996pt on input line 20.
 LaTeX Font Info:    Font shape `T1/phv/b/n' will be
-(Font)              scaled to size 23.63593pt on input line 18.
+(Font)              scaled to size 23.63593pt on input line 20.
 LaTeX Font Info:    Font shape `T1/phv/m/n' will be
-(Font)              scaled to size 16.41594pt on input line 18.
-LaTeX Font Info:    Trying to load font information for OT1+ppl on input line 1
-8.
+(Font)              scaled to size 16.41594pt on input line 20.
+LaTeX Font Info:    Trying to load font information for OT1+ppl on input line 2
+0.
  (C:\Users\Burge\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1ppl.fd
 File: ot1ppl.fd 2001/06/04 font definitions for OT1/ppl.
 )
@@ -710,25 +710,25 @@ File: ot1ppl.fd 2001/06/04 font definitions for OT1/ppl.
 File: mt-ppl.cfg 2005/11/16 v1.6 microtype config. file: Palatino (RS)
 )
 LaTeX Font Info:    Trying to load font information for OML+zplm on input line 
-18.
+20.
 
 (C:\Users\Burge\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\omlzplm.fd
 File: omlzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OML/zplm.
 )
 LaTeX Font Info:    Trying to load font information for OMS+zplm on input line 
-18.
+20.
 
 (C:\Users\Burge\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\omszplm.fd
 File: omszplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMS/zplm.
 )
 LaTeX Font Info:    Trying to load font information for OMX+zplm on input line 
-18.
+20.
 
 (C:\Users\Burge\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\omxzplm.fd
 File: omxzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMX/zplm.
 )
 LaTeX Font Info:    Trying to load font information for OT1+zplm on input line 
-18.
+20.
 
 (C:\Users\Burge\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1zplm.fd
 File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
@@ -744,11 +744,11 @@ Package microtype Info: Loading generic protrusion settings for font family
 {C:/Users/Burge/AppData/Local/MiKTeX/pdftex/config/pdftex.map} <./UOY-Logo-Stac
 ked-shield-Black.png>]
 LaTeX Font Info:    Font shape `T1/phv/b/n' will be
-(Font)              scaled to size 13.67995pt on input line 18.
+(Font)              scaled to size 13.67995pt on input line 20.
  [2
 
 ]
-Package tocbasic Info: character protrusion at toc deactivated on input line 18
+Package tocbasic Info: character protrusion at toc deactivated on input line 20
 .
  (ISM-2018-19-ReportTemplateLatex.toc)
 \tf@toc=\write4
@@ -758,7 +758,7 @@ Package tocbasic Info: character protrusion at toc deactivated on input line 18
 
 
 ]
-Package tocbasic Info: character protrusion at lof deactivated on input line 19
+Package tocbasic Info: character protrusion at lof deactivated on input line 21
 .
 
 (ISM-2018-19-ReportTemplateLatex.lof)
@@ -768,7 +768,7 @@ Package tocbasic Info: character protrusion at lof deactivated on input line 19
  [4
 
 ]
-Package tocbasic Info: character protrusion at lot deactivated on input line 20
+Package tocbasic Info: character protrusion at lot deactivated on input line 22
 .
  (ISM-2018-19-ReportTemplateLatex.lot)
 \tf@lot=\write6
@@ -782,16 +782,16 @@ chapter without number
 
 ]
 chapter 1.
-LaTeX Font Info:    Font shape `T1/phv/b/n' will be
-(Font)              scaled to size 16.41594pt on input line 46.
 [1
 
 
 ]
 LaTeX Font Info:    Font shape `T1/phv/m/sl' will be
-(Font)              scaled to size 11.39996pt on input line 56.
+(Font)              scaled to size 11.39996pt on input line 53.
  [2]
 chapter 2.
+LaTeX Font Info:    Font shape `T1/phv/b/n' will be
+(Font)              scaled to size 16.41594pt on input line 58.
 [3
 
 ]
@@ -799,60 +799,82 @@ chapter 3.
 [4
 
 ]
-chapter A.
+chapter 4.
 [5
 
 ]
-chapter B.
+chapter 5.
 [6
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 94--95
+chapter A.
+[7
+
+]
+chapter B.
+[8
+
+]
+Underfull \hbox (badness 1975) in paragraph at lines 107--108
+[]\T1/phv/m/n/12 (+20) D. A. Lima and G. M. B. Oli-veira, "A prob-ab-il-istic c
+el-lu-lar
+ []
+
+
+Underfull \hbox (badness 2237) in paragraph at lines 107--108
+\T1/phv/m/n/12 (+20) 2016 14th In-ter-na-tional Con-fer-ence on Con-trol, Auto-
+ma-tion,
+ []
+
+
+Underfull \hbox (badness 1496) in paragraph at lines 107--108
+\T1/phv/m/n/12 (+20) Ro-bot-ics and Vis-ion (ICARCV), Phuket, 2016, pp. 1-6, do
+i:
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 116--117
 []\T1/phv/m/n/12 (+20) C. Mims, `Why CPUs Aren't Get-ting Any Faster',
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 94--95
+Underfull \hbox (badness 10000) in paragraph at lines 116--117
 \T1/phv/m/n/12 (+20) MIT Tech-no-logy Re-view, 2010. [On-line]. Avail-able:
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 94--95
+Underfull \hbox (badness 10000) in paragraph at lines 116--117
 \T1/phv/m/n/12 (+20) https://www.technologyreview.com/2010/10/12/199966/why-cpu
 s-
  []
 
-[7
+[9
 
-] (ISM-2018-19-ReportTemplateLatex.aux)
+] [10] (ISM-2018-19-ReportTemplateLatex.aux)
 Package rerunfilecheck Info: File `ISM-2018-19-ReportTemplateLatex.out' has not
  changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  )
 (\end occurred inside a group at level 1)
 
 ### simple group (level 1) entered at line 49 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 12877 strings out of 479799
- 231917 string characters out of 2869722
- 741218 words of memory out of 3000000
- 29533 multiletter control sequences out of 15000+200000
- 571209 words of font info for 116 fonts, out of 3000000 for 9000
+ 12915 strings out of 479799
+ 232334 string characters out of 2869722
+ 743161 words of memory out of 3000000
+ 29542 multiletter control sequences out of 15000+200000
+ 572084 words of font info for 130 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 119i,7n,124p,10673b,7891s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 119i,7n,124p,10673b,8005s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/Burge/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/b
 ase/8r.enc}<C:/Users/Burge/AppData/Local/Programs/MiKTeX/fonts/type1/urw/helvet
 ic/uhvb8a.pfb><C:/Users/Burge/AppData/Local/Programs/MiKTeX/fonts/type1/urw/hel
 vetic/uhvr8a.pfb><C:/Users/Burge/AppData/Local/Programs/MiKTeX/fonts/type1/urw/
 helvetic/uhvro8a.pfb>
-Output written on ISM-2018-19-ReportTemplateLatex.pdf (13 pages, 63169 bytes).
+Output written on ISM-2018-19-ReportTemplateLatex.pdf (16 pages, 74098 bytes).
 PDF statistics:
- 145 PDF objects out of 1000 (max. 8388607)
- 34 named destinations out of 1000 (max. 500000)
- 20046 words of extra memory for PDF output out of 20736 (max. 10000000)
+ 176 PDF objects out of 1000 (max. 8388607)
+ 42 named destinations out of 1000 (max. 500000)
+ 20054 words of extra memory for PDF output out of 20736 (max. 10000000)
 

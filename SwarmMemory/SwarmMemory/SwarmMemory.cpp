@@ -31,6 +31,8 @@ int frame_loop(GLFWwindow* window, Agent* swarm[], int swarmsize)
 
         /* Draw Image */
         // change i to 0 when stopping debug
+
+        //TODO: REDO main so that it is actually in parrell so set of threads for each agent then loop the graphics
         for (int i = 1; i < swarmsize; i++) {
             render_circle(swarm[i] -> body, 20, 1, 1, 0, true);
             render_circle(swarm[i] -> conn_area, 20, 1, 0, 0, false);

@@ -74,12 +74,23 @@ These algorithms are good for longer term data storage with average popularity i
 
 Some of the problems arisen from random replication policys has spawned a new design policys, of which can handle correlated, non-correlated errors.
 Usually these policys also account for the demand of such item \cite{Avalability storage, Distributed Storage}.
-To tackle these problems two approches have been taken, one is to go from a higher level approcach where you have a sort of manager which chooses which items to replicate and where based of demand and knowledge of other replications \cite{Avalability storage, Patent}, not as suitable in terms of actual data changes but scheme changes of servers \cite{Scheme changes}.
-Working versions of these over a cloud service are tied together sually with "Distributed key-value store"  \cite{Key-Value} where you have these key-value pairs on multiple devices on a network and duplication only leads to more fault tolerance of the data stored.
+To tackle these problems two approches have been taken, one is to go from a higher level approcach where you have a sort of manager which chooses which items to replicate and where based off demand, knowledge of other replications and outside factors \cite{Avalability storage, Patent}, not as suitable in terms of actual data changes but scheme changes of servers \cite{Scheme changes}.
+Working versions of these over a cloud service are tied together usually with a "Distributed key-value store"  \cite{Key-Value} where you have these key-value pairs on multiple devices on a network and duplication only leads to more fault tolerance of the data stored.
 
-Another way to handle this which doesn't rely on a more priverliged node or duplicated data, and creates a distributed system is by having 
+Another way to handle this which doesn't rely on a more priverliged node or duplicated data, and creates a distributed system is by having something like "SKUTE" as proposed in \cite{Distributed Storage}.
+This is where all indurvidual key-values have a their own choose on what to do in a distributed system.
+This is descirbed as four sections which are Migration, Suicide, Replication and Nothing; where Migration is the moving of data to lower costing and more redundant servers, Suicide is the removal of itself usally based on amount of duplicates and uses soemthing like Paxos \cite{Paxos} to decide if it should suicide and Replication where it decides that it is being used enough to need to be replicated or their is possibly no other duplicates of this data.
 
-// TODO: Talk about diffrent types distributed, random repeat things like that 
+An algrithm like "SKUTE" \cite{Distributed Storage} will be suited best for swarm like agents due to the distributed nature of a swarm, and not wanting to have a static/tempory leader due to issues like communication bottleneck, power loss in the swarm near the leader due to flow of infomation to the leader, loss of leader (mainly only if static) \cite{Swarm robotics reviewed, Swarm intellegiegence}.
+Also some of the main resons for using swarm robotics is the inherint parrell nature that they bring to the table, therefore creating leader based algorithms are not in the spirit of the design of a homogenus swarm, unlike a hetrogenius swarm.
+
+Another area of study which is highly statc is storage of data on local disks and how to keep either backups for disk failure or/and improve write performance onto disks, rather than just duplicating data like as described above.
+An example scheme for this is something like RAID, which have diffrent levels based off the type of 	attributes that you may need \cite{RAID Levels}.
+In terms of cloud based storage RAID arrays are used commonaly internally rather than externally to a diffrent NAS or storage server.
+This is uaully because we will have the gurantees of RAID for disk failures if they acquire and for example a server goes down we have the above replication schemes to be able to handle that.
+Therefore leading to having RAID arrays across multiple nodes to be sort of redundant.
+However with using a parity \cite{Raid parity} based higher level scheme you will get space savings on the duplication of data, this is harder to implement though and most likely not needed due to servers that are lost due to power outages usally come back on pretty soon also know as something like a concurrent-failure.
+
 // TODO: Say what a correlated and non correlated failure is
 
 \section{Swarm robotics}
@@ -161,6 +172,9 @@ L. Lamport, ‘The Part-Time Parliament’, in Concurrency: The Works of Leslie 
 
 \bibitem{Quorum}
 D. Agrawal and A. E. Abbadi. The tree quorum protocol: An efficient approach for managing replicated data. In VLDB’90: Proc. of the 16th International Conference on Very Large Data Bases, pages 243–254, Brisbane, Queensland,Australia, 1990.
+
+\bibitem{RAID levels}
+S. Lynn, ‘RAID Levels Explained’, PC Mag, 2014. [Online]. Available: https://uk.pcmag.com/storage/7917/raid-levels-explained. [Accessed: 06-Dec-2020].
 
 \end{thebibliography}
 

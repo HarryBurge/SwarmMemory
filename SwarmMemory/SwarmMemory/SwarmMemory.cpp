@@ -4,13 +4,13 @@
 #include <ctime>
 #include <tbb/tbb.h>
 #include <string>
-#include <thread>
 #include <vector>
 
 #include "Util.cpp"
 #include "Visuals.h"
 #include "Agent.h"
-#include "Data.h"
+using namespace std;
+const int num_swarm = 20;
 
 
 /* Key call back for window control */
@@ -22,27 +22,34 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 
 /* Main control loop - Basically iterator */
-int draw_loop(GLFWwindow* window, vector<Agent*> swarm, int swarmsize)
+int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
 {
+
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        //debug
-        render_circle(swarm[0]->body, 20, 1, 1, 1, true);
-        render_circle(swarm[0]->conn_area, 20, 1, 0, 1, false);
+        for (int i = 0; i < swarm.size(); i++) {
+            render_circle(swarm[i]->body, 20, 1, 1, 0, true);
+            render_circle(swarm[i]->conn_area, 20, 1, 0, 0, false);
+        }
 
-        //todo: redo main so that it is actually in parrell so set of threads for each agent then loop the graphics
-        for (int i = 1; i < swarmsize; i++) {
-            render_circle(swarm[i] -> body, 20, 1, 1, 0, true);
-            render_circle(swarm[i] -> conn_area, 20, 1, 0, 0, false);
+        for (int i = 0; i < swarm.size(); i++) {
+            while (swarm[i]->conns.size() != 0) {
+                pair<Coord, Coord> line = swarm[i]->conns.back();
+                render_line(line.first, line.second);
+                swarm[i]->conns.pop_back();
+            }
         }
 
         /* step simulation */
-        tbb::parallel_for(tbb::blocked_range<int>(0, swarmsize), [&](tbb::blocked_range<int> r) {
+        /*tbb::parallel_for(tbb::blocked_range<int>(0, swarm.size()), [&](tbb::blocked_range<int> r) {
             for (int i = r.begin(); i < r.end(); ++i)
                 swarm[i] -> step(swarm);
-            });
+            });*/
+        for (int i = 0; i < swarm.size(); i++) {
+            swarm[i]->step(swarm);
+        }
         
 
         glfwSwapBuffers(window);
@@ -72,7 +79,6 @@ int main()
     /* Init swarm */
     srand(static_cast <unsigned> (time(0)));
 
-    const int num_swarm = 10;
     vector<Agent*> swarm;
 
     for (int i = 0; i < num_swarm; i++) {
@@ -101,7 +107,7 @@ int main()
 
 
     /* The main control loop */
-    draw_loop(window, swarm, num_swarm);
+    draw_loop(window, swarm);
 
     glfwTerminate();
 }

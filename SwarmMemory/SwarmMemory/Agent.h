@@ -1,30 +1,36 @@
 #ifndef AGENT_H
 #define AGENT_H
 
+#include <vector>
+
 #include "AgentMemory.h"
+#include "Packet.h"
 #include "Util.cpp"
-#include "Data.h"
+using namespace std;
 
 class Agent
 {
-	public:
-		float id;
-		Circle* body;
-		Circle* conn_area;
+public:
+	Circle body;
+	Circle conn_area;
+	vector<pair<Coord, Coord>> conns;
+	
+	Agent();
+	Agent(int, float, float, float);
 
-		AgentMemory mem;
+	void step(vector<Agent*>);
+	bool recieved(Packet);
 
-		float facing;
+	string to_string();
 
-		Agent();
-		Agent(int, float, float, float);
+private:
+	float id;
+	float facing;
 
-		void step(vector<Agent*>);
-		void move(float, float);
-		void recieve(Data);
-		void send(vector<Agent*>, int, Data);
+	AgentMemory* mem;
 
-		std::string to_string();
+	void move(float, float);
+	void broadcast(vector<Agent*>, Packet);
 };
 
 #endif

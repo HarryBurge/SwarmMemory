@@ -9,8 +9,8 @@ class Agent
 {
 	public:
 		float id;
-		Circle body;
-		Circle conn_area;
+		Circle* body;
+		Circle* conn_area;
 
 		AgentMemory mem;
 
@@ -19,10 +19,10 @@ class Agent
 		Agent();
 		Agent(int, float, float, float);
 
-		void step(Agent*[], int);
+		void step(vector<Agent*>);
 		void move(float, float);
 		void recieve(Data);
-		void send(Agent* [], int, Data);
+		void send(vector<Agent*>, int, Data);
 
 		std::string to_string();
 };

@@ -5,6 +5,7 @@
 #include <tbb/tbb.h>
 #include <string>
 #include <vector>
+#include <thread>
 
 #include "Util.cpp"
 #include "Visuals.h"

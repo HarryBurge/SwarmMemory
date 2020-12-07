@@ -1,6 +1,15 @@
 #include "Agent.h"
 const double pi = 2 * acos(0.0);
 
+/*
+Proccdure values
+
+0 - Nominal start
+	0 ~
+
+
+*/
+
 Agent::Agent() {
 }
 
@@ -12,14 +21,22 @@ Agent::Agent(int aid, float ax, float ay, float afacing) {
 	conn_area = Circle(ax, ay, 0.2);
 
 	mem = new AgentMemory();
+
+	pc = 0;
+	proccedure = 0;
 };
 
 void Agent::step(vector<Agent*> swarm) {
-	broadcast(swarm, Packet(2));
-	for (int i = 0; i < 11; i++) {
-		mem->pop_radio();
-	}
 	move(0.001, 0.0001);
+	
+	if (proccedure == 0) {
+		
+		if (mem->learned) {
+			mem->learned = false;
+			//Replicate
+		}
+
+	}
 }
 
 void Agent::move(float dangle, float speed) {

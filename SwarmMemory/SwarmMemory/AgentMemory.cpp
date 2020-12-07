@@ -2,6 +2,7 @@
 #include <boost/optional.hpp>
 
 AgentMemory::AgentMemory() {
+	learned = false;
 }
 
 bool AgentMemory::push_pri_mem(Data dt) {
@@ -10,6 +11,7 @@ bool AgentMemory::push_pri_mem(Data dt) {
 	}
 	else {
 		pri_mem.push_back(dt);
+		learned = true;
 		return true;
 	}
 }

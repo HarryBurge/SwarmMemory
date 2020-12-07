@@ -13,6 +13,8 @@ class AgentMemory {
 public:
 	AgentMemory();
 
+	bool learned;
+
 	bool push_pri_mem(Data);
 	bool push_pub_mem(Data);
 	bool push_radio_mem(Packet);

@@ -27,6 +27,9 @@ private:
 	float id;
 	float facing;
 
+	int proccedure;
+	int pc;
+
 	AgentMemory* mem;
 
 	void move(float, float);

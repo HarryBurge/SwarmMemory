@@ -34,7 +34,7 @@ int AgentMemory::get_pri_index_rep_more_than() {
 }
 
 int AgentMemory::get_pub_index_rep_more_than() {
-	for (int i = 0; pub_mem.size(); i++) {
+	for (int i = 0; i<pub_mem.size(); i++) {
 		if (pub_mem[i].replication_num > 0) {
 			return i;
 		}
@@ -43,22 +43,30 @@ int AgentMemory::get_pub_index_rep_more_than() {
 }
 
 
-Data AgentMemory::get_pri_index(int ind) {
-	return pri_mem[ind];
+bool AgentMemory::space_in_pri() {
+	if (pri_mem.size() < pri_max_size) {
+		return true;
+	}
+	return false;
 }
 
-Data AgentMemory::get_pub_index(int ind) {
-	return pub_mem[ind];
+bool AgentMemory::space_in_pub() {
+	if (pub_mem.size() < pub_max_size) {
+		return true;
+	}
+	return false;
 }
 
 
-void AgentMemory::set_pri_index(int ind, Data dt) {
-	pri_mem[ind] = dt;
+bool AgentMemory::pub_has_data_id(int did) {
+	for (int i = 0; i < pub_mem.size(); i++) {
+		if (pub_mem[i].id == did) {
+			return true;
+		}
+	}
+	return false;
 }
 
-void AgentMemory::set_pub_index(int ind, Data dt) {
-	pub_mem[ind] = dt;
-}
 
 string AgentMemory::to_string() {
 	string line = "Pri Mem = [";

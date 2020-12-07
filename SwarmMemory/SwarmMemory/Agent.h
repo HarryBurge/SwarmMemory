@@ -11,6 +11,8 @@ using namespace std;
 class Agent
 {
 public:
+	float id;
+
 	Circle body;
 	Circle conn_area;
 	vector<pair<Coord, Coord>> conns;
@@ -26,7 +28,6 @@ public:
 	string to_string();
 
 private:
-	float id;
 	float facing;
 
 	void move(float, float);

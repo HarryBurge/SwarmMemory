@@ -8,6 +8,6 @@
 void render_triangle(Triangle);
 void render_circle(Circle, int, float, float, float, bool);
 void render_quadrilatral(Quadrilateral);
-void render_line(Coord, Coord);
+void render_line(Coord, Coord, float, float, float);
 
 #endif

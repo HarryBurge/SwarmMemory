@@ -46,9 +46,11 @@ void render_quadrilatral(Quadrilateral body) {
     glEnd();
 }
 
-void render_line(Coord point1, Coord point2) {
+void render_line(Coord point1, Coord point2, float r=1, float g=1, float b=1) {
     glBegin(GL_LINE_STRIP);
+    glColor3f(r, g, b);
     glVertex2f(point1.x, point1.y);
     glVertex2f(point2.x, point2.y);
+    glColor3f(1, 1, 1);
     glEnd();
 }

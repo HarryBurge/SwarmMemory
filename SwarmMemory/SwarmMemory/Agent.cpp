@@ -15,11 +15,12 @@ Agent::Agent(int aid, float ax, float ay, float afacing) {
 };
 
 void Agent::step(vector<Agent*> swarm) {
-	move(0.001, 0.0001);
+	move(0.001, 0.0001 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.0004 - 0.0001))));
+	//message(swarm, Packet(1, id, -1));
 
 	if (mem->get_pri_index_rep_more_than() != -1) {
 		// Replicate
-		vector<Packet> collect = message(swarm, Packet(mem->pri_mem[mem->get_pri_index_rep_more_than()], 2, id, 10));
+		vector<Packet> collect = message(swarm, Packet(mem->pri_mem[mem->get_pri_index_rep_more_than()], 2, id, -1));
 
 		bool all_failed = true;
 
@@ -31,10 +32,20 @@ void Agent::step(vector<Agent*> swarm) {
 			}
 		}
 	}
-	
+
 	if (mem->get_pub_index_rep_more_than() != -1) {
 		//Replicate
-		mem->pub_mem[mem->get_pub_index_rep_more_than()].replication_num--;
+		vector<Packet> collect = message(swarm, Packet(mem->pub_mem[mem->get_pub_index_rep_more_than()], 2, id, -1));
+
+		bool all_failed = true;
+
+		for (int i = 0; i < collect.size(); i++) {
+			if (collect[0].type != 0) {
+				all_failed = false;
+				mem->pub_mem[mem->get_pub_index_rep_more_than()].replication_num--;
+				break;
+			}
+		}
 	}
 
 	//TODO: Continue
@@ -60,8 +71,18 @@ void Agent::move(float dangle, float speed) {
 }
 
 Packet Agent::recieved(Packet packet) {
-	if (packet.recieverid == id || packet.recieverid == -1) {
-		return Packet(1, packet.recieverid, packet.senderid);
+	if (packet.senderid != id && (packet.recieverid == id || packet.recieverid == -1)) {
+
+		if (packet.type == 1) {
+			return Packet(1, packet.recieverid, packet.senderid);
+		}
+
+		if (packet.type == 2 && mem->space_in_pub() && packet.data.creator_id != id && !mem->pub_has_data_id(packet.data.id)) {
+			packet.data.replication_num--;
+			mem->push_pub_mem(packet.data);
+			return Packet(1, packet.recieverid, packet.senderid);
+		}
+
 	}
 	return Packet(0, packet.recieverid, packet.senderid);
 }

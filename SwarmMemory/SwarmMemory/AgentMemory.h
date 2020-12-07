@@ -23,11 +23,10 @@ public:
 	int get_pri_index_rep_more_than();
 	int get_pub_index_rep_more_than();
 
-	Data get_pri_index(int);
-	Data get_pub_index(int);
+	bool space_in_pri();
+	bool space_in_pub();
 
-	void set_pri_index(int, Data);
-	void set_pub_index(int, Data);
+	bool pub_has_data_id(int);
 
 	string to_string();
 };

@@ -2,35 +2,34 @@
 #define AGENTMEM_H
 
 #include <vector>
-#include <deque>
 
 #include "Data.h"
-#include "Packet.h"
 using namespace std;
+
+const int pri_max_size = 10;
+const int pub_max_size = 10;
 
 class AgentMemory {
 
 public:
-	AgentMemory();
+	vector<Data> pri_mem;
+	vector<Data> pub_mem;
 
-	bool learned;
+	AgentMemory();
 
 	bool push_pri_mem(Data);
 	bool push_pub_mem(Data);
-	bool push_radio_mem(Packet);
 
-	Packet pop_radio();
+	int get_pri_index_rep_more_than();
+	int get_pub_index_rep_more_than();
+
+	Data get_pri_index(int);
+	Data get_pub_index(int);
+
+	void set_pri_index(int, Data);
+	void set_pub_index(int, Data);
 
 	string to_string();
-
-private:
-	vector<Data> pri_mem;
-	vector<Data> pub_mem;
-	deque<Packet> radio_buffer;
-
-	const int pri_max_size = 10;
-	const int pub_max_size = 10;
-	const int radio_max_size = 10;
 };
 
 #endif

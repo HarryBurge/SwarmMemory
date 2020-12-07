@@ -14,12 +14,14 @@ public:
 	Circle body;
 	Circle conn_area;
 	vector<pair<Coord, Coord>> conns;
+
+	AgentMemory* mem;
 	
 	Agent();
 	Agent(int, float, float, float);
 
 	void step(vector<Agent*>);
-	bool recieved(Packet);
+	Packet recieved(Packet);
 
 	string to_string();
 
@@ -27,13 +29,9 @@ private:
 	float id;
 	float facing;
 
-	int proccedure;
-	int pc;
-
-	AgentMemory* mem;
-
 	void move(float, float);
-	void broadcast(vector<Agent*>, Packet);
+	/*void broadcast(vector<Agent*>, Packet);*/
+	vector<Packet> message(vector<Agent*> swarm, Packet packet);
 };
 
 #endif

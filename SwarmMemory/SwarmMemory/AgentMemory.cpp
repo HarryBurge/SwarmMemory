@@ -1,8 +1,6 @@
 #include "AgentMemory.h"
-#include <boost/optional.hpp>
 
 AgentMemory::AgentMemory() {
-	learned = false;
 }
 
 bool AgentMemory::push_pri_mem(Data dt) {
@@ -11,7 +9,6 @@ bool AgentMemory::push_pri_mem(Data dt) {
 	}
 	else {
 		pri_mem.push_back(dt);
-		learned = true;
 		return true;
 	}
 }
@@ -26,25 +23,41 @@ bool AgentMemory::push_pub_mem(Data dt) {
 	}
 }
 
-bool AgentMemory::push_radio_mem(Packet dt) {
-	if (radio_buffer.size() >= radio_max_size) {
-		return false;
+
+int AgentMemory::get_pri_index_rep_more_than() {
+	for (int i = 0; i < pri_mem.size(); i++) {
+		if (pri_mem[i].replication_num > 0) {
+			return i;
+		}
 	}
-	else {
-		radio_buffer.push_back(dt);
-		return true;
-	}
+	return -1;
 }
 
-Packet AgentMemory::pop_radio() {
-	if (radio_buffer.size() == 0) {
-		return Packet(0);
+int AgentMemory::get_pub_index_rep_more_than() {
+	for (int i = 0; pub_mem.size(); i++) {
+		if (pub_mem[i].replication_num > 0) {
+			return i;
+		}
 	}
-	else {
-		Packet temp = radio_buffer.front();
-		radio_buffer.pop_front();
-		return temp;
-	}
+	return -1;
+}
+
+
+Data AgentMemory::get_pri_index(int ind) {
+	return pri_mem[ind];
+}
+
+Data AgentMemory::get_pub_index(int ind) {
+	return pub_mem[ind];
+}
+
+
+void AgentMemory::set_pri_index(int ind, Data dt) {
+	pri_mem[ind] = dt;
+}
+
+void AgentMemory::set_pub_index(int ind, Data dt) {
+	pub_mem[ind] = dt;
 }
 
 string AgentMemory::to_string() {

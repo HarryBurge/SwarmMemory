@@ -1,15 +1,6 @@
 #include "Agent.h"
 const double pi = 2 * acos(0.0);
 
-/*
-Proccdure values
-
-0 - Nominal start
-	0 ~
-
-
-*/
-
 Agent::Agent() {
 }
 
@@ -21,22 +12,34 @@ Agent::Agent(int aid, float ax, float ay, float afacing) {
 	conn_area = Circle(ax, ay, 0.2);
 
 	mem = new AgentMemory();
-
-	pc = 0;
-	proccedure = 0;
 };
 
 void Agent::step(vector<Agent*> swarm) {
 	move(0.001, 0.0001);
-	
-	if (proccedure == 0) {
-		
-		if (mem->learned) {
-			mem->learned = false;
-			//Replicate
-		}
 
+	if (mem->get_pri_index_rep_more_than() != -1) {
+		// Replicate
+		vector<Packet> collect = message(swarm, Packet(mem->pri_mem[mem->get_pri_index_rep_more_than()], 2, id, 10));
+
+		bool all_failed = true;
+
+		for (int i = 0; i < collect.size(); i++) {
+			if (collect[0].type != 0) {
+				all_failed = false;
+				mem->pri_mem[mem->get_pri_index_rep_more_than()].replication_num--;
+				break;
+			}
+		}
 	}
+	
+	if (mem->get_pub_index_rep_more_than() != -1) {
+		//Replicate
+		mem->pub_mem[mem->get_pub_index_rep_more_than()].replication_num--;
+	}
+
+	//TODO: Continue
+	// Suidcide thing
+	// Optimise thing
 }
 
 void Agent::move(float dangle, float speed) {
@@ -56,21 +59,38 @@ void Agent::move(float dangle, float speed) {
 	conn_area.translate(dx, dy);
 }
 
-bool Agent::recieved(Packet packet) {
-	if (mem->push_radio_mem(packet)) {
-		return true;
+Packet Agent::recieved(Packet packet) {
+	if (packet.recieverid == id || packet.recieverid == -1) {
+		return Packet(1, packet.recieverid, packet.senderid);
 	}
-	return false;
+	return Packet(0, packet.recieverid, packet.senderid);
 }
 
-void Agent::broadcast(vector<Agent*> swarm, Packet packet) {
+//void Agent::broadcast(vector<Agent*> swarm, Packet packet) {
+//	for (int i = 0; i < swarm.size(); i++) {
+//		if (swarm[i]->id != id && conn_area.point_in_circle(swarm[i]->body.center)) {
+//			if (swarm[i]->recieved(packet).type!=0) {
+//				conns.push_back(pair<Coord,Coord>(body.center, swarm[i]->body.center));
+//			}
+//		}
+//	}
+//}
+
+vector<Packet> Agent::message(vector<Agent*> swarm, Packet packet) {
+	vector<Packet> collect;
+
 	for (int i = 0; i < swarm.size(); i++) {
 		if (swarm[i]->id != id && conn_area.point_in_circle(swarm[i]->body.center)) {
-			if (swarm[i]->recieved(packet)) {
-				conns.push_back(pair<Coord,Coord>(body.center, swarm[i]->body.center));
+			Packet temp = swarm[i]->recieved(packet);
+
+			if (temp.type != 0) {
+				conns.push_back(pair<Coord, Coord>(body.center, swarm[i]->body.center));
+				collect.push_back(temp);
 			}
 		}
 	}
+
+	return collect;
 }
 
 std::string Agent::to_string() {

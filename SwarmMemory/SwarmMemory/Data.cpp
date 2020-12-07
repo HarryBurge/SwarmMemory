@@ -15,6 +15,7 @@ Data::Data(int cid, int rep_num, int dt) {
 }
 
 std::string Data::to_string() {
-	std::string line = std::to_string(data);
+	std::string line = "{cid=" + std::to_string(creator_id) + ",rep_num=" + std::to_string(replication_num);
+	line += ",data=" + std::to_string(data) + ",locked=" + std::to_string(locked) + "}";
 	return line;
 }

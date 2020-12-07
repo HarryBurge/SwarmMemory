@@ -1,15 +1,28 @@
 #ifndef PACKET_H
 #define PACKET_H
 
-#include <string>
+#include "Data.h"
+
+/* 
+Packet types
+
+0 - False
+1 - True
+2 - Replicate data
+
+*/
 class Packet
 {
 public:
-	std::string data;
+	Data data;
 	int type;
+	int senderid;
+	int recieverid;
 
 	Packet();
 	Packet(int);
+	Packet(int, int, int);
+	Packet(Data, int, int, int);
 };
 
 #endif

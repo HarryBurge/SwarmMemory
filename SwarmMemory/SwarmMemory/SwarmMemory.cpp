@@ -11,7 +11,7 @@
 #include "Visuals.h"
 #include "Agent.h"
 using namespace std;
-const int num_swarm = 20;
+const int num_swarm = 11;
 
 
 /* Key call back for window control */
@@ -26,9 +26,13 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
 {
 
+    swarm[0]->mem->push_pri_mem(Data(0, 10000, 1));
+
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);
+
+        cout << swarm[0]->to_string() << endl;
 
         for (int i = 0; i < swarm.size(); i++) {
             render_circle(swarm[i]->body, 20, 1, 1, 0, true);
@@ -44,14 +48,10 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
         }
 
         /* step simulation */
-        /*tbb::parallel_for(tbb::blocked_range<int>(0, swarm.size()), [&](tbb::blocked_range<int> r) {
+        tbb::parallel_for(tbb::blocked_range<int>(0, swarm.size()), [&](tbb::blocked_range<int> r) {
             for (int i = r.begin(); i < r.end(); ++i)
                 swarm[i] -> step(swarm);
-            });*/
-        for (int i = 0; i < swarm.size(); i++) {
-            swarm[i]->step(swarm);
-        }
-        
+            });
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -83,8 +83,8 @@ int main()
     vector<Agent*> swarm;
 
     for (int i = 0; i < num_swarm; i++) {
-        float x = -0.1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.1 - -0.1)));
-        float y = -0.1 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.1 - -0.1)));
+        float x = -0.3 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.3 - -0.3)));
+        float y = -0.3 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.3 - -0.3)));
         float f = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (6 - 0)));
         
         swarm.push_back(new Agent(i, x, y, f));

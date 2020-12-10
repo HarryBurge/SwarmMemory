@@ -23,58 +23,76 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     }
 }
 
+void draw_agent_stuffs(vector<Agent*> swarm, int i) {
+    // Connection lines
+    if (draw_conn_connections) {
+        for (int j = 0; j < swarm.size(); j++) {
+            if (swarm[i]->id != swarm[j]->id && swarm[j]->conn_area.point_in_circle(swarm[i]->body.center)) {
+                render_line(swarm[i]->body.center, swarm[j]->body.center, 0.4, 0.4, 0.4);
+            }
+        }
+    }
+
+    //Drawing current transfers
+    while (swarm[i]->conns.size() != 0) {
+        pair<int, pair<Coord, Coord>> line = swarm[i]->conns.back();
+
+        if (line.first == 1) {
+            render_line(line.second.first, line.second.second, 0.4, 0.4, 0.4);
+        }
+        else if (line.first == 2) {
+            render_line(line.second.first, line.second.second, 0, 1, 1);
+        }
+        else if (line.first == 3) {
+            render_line(line.second.first, line.second.second, 1, 0, 1);
+        }
+        else if (line.first == 4) {
+            render_line(line.second.first, line.second.second, 1, 1, 1);
+        }
+        swarm[i]->conns.pop_back();
+    }
+
+    //Drawing agents
+    float r = 0.6;
+    float g = 0.6;
+    float b = 0.0;
+
+    if (swarm[i]->mem->pub_has_data_id(1)) {
+        g = 1;
+    }
+    if (swarm[i]->mem->pub_has_data_id(2)) {
+        b = 1;
+    }
+
+    render_circle(swarm[i]->body, 20, r, g, b, true);
+
+    if (i <= 1) {
+        render_circle(swarm[i]->body, 20, 1, 1, 1, true);
+    }
+    if (draw_conn_circles) {
+        render_circle(swarm[i]->conn_area, 20, 1, 0, 0, false);
+    }
+}
+
 
 /* Main control loop - Basically iterator */
 int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
 {
 
     //Debug
-    swarm[0]->mem->push_pri_mem(Data(1, 0, 10, 1, Coord(0, 0)));
+    swarm[0]->mem->push_pri_mem(Data(1, 0, 4, 1, Coord(0, 0)));
+    swarm[1]->mem->push_pri_mem(Data(2, 1, 4, 1, Coord(0, 0)));
 
     while (!glfwWindowShouldClose(window))
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Connection lines
-        if (draw_conn_connections) {
-            for (int i = 0; i < swarm.size(); i++) {
-                for (int j = 0; j < swarm.size(); j++) {
-                    if (swarm[i]->id != swarm[j]->id && swarm[j]->conn_area.point_in_circle(swarm[i]->body.center)) {
-                        render_line(swarm[i]->body.center, swarm[j]->body.center, 0.4, 0.4, 0.4);
-                    }
-                }
-            }
-        }
+        vector<thread> threads;
 
-        //Drawing current transfers
         for (int i = 0; i < swarm.size(); i++) {
-            while (swarm[i]->conns.size() != 0) {
-                pair<int, pair<Coord, Coord>> line = swarm[i]->conns.back();
-
-                if (line.first == 1) {
-                    render_line(line.second.first, line.second.second, 0, 0.5, 1);
-                }
-                else if (line.first == 2) {
-                    render_line(line.second.first, line.second.second, 0, 1, 1);
-                }
-                else if (line.first == 3) {
-                    render_line(line.second.first, line.second.second, 1, 1, 1);
-                }
-                swarm[i]->conns.pop_back();
-            }
+            draw_agent_stuffs(swarm, i);
         }
 
-        //Drawing agents
-        for (int i = 0; i < swarm.size(); i++) {
-            render_circle(swarm[i]->body, 20, 1, 1, 0, true);
-
-            if (i == 0) {
-                render_circle(swarm[i]->body, 20, 1, 1, 1, true);
-            }
-            if (draw_conn_circles) {
-                render_circle(swarm[i]->conn_area, 20, 1, 0, 0, false);
-            }
-        }
 
         /* step simulation */
         tbb::parallel_for(tbb::blocked_range<int>(0, swarm.size()), [&](tbb::blocked_range<int> r) {
@@ -97,18 +115,22 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
         //    }
         //}
 
-        int counter = 0;
+        int counter1 = 0;
+        int counter2 = 0;
 
         for (int i = 0; i < swarm.size(); i++) {
             if (swarm[i]->mem->pub_has_data_id(1)) {
-                counter++;
+                counter1++;
+            }
+            if (swarm[i]->mem->pub_has_data_id(2)) {
+                counter2++;
             }
         }
 
-        cout << counter << endl;
+        cout << counter1 << "  " << counter2 << endl;
 
-        string tom;
-        cin >> tom;
+        //string tom;
+        //cin >> tom;
 
 
        //Sleep(100);

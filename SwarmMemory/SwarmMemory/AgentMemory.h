@@ -2,6 +2,7 @@
 #define AGENTMEM_H
 
 #include <vector>
+#include <mutex>
 
 #include "Data.h"
 using namespace std;
@@ -15,6 +16,8 @@ public:
 	vector<Data> pri_mem;
 	vector<Data> pub_mem;
 
+	std::mutex myMutex;
+
 	AgentMemory();
 
 	bool push_pri_mem(Data);
@@ -27,6 +30,8 @@ public:
 	bool space_in_pub();
 
 	bool pub_has_data_id(int);
+
+	void remove_pub(int);
 
 	string to_string();
 };

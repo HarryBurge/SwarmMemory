@@ -31,7 +31,6 @@ private:
 	float facing;
 
 	void move(float, float);
-	/*void broadcast(vector<Agent*>, Packet);*/
 	vector<Packet> message(vector<Agent*> swarm, Packet packet);
 };
 

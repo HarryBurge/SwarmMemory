@@ -14,11 +14,15 @@ bool AgentMemory::push_pri_mem(Data dt) {
 }
 
 bool AgentMemory::push_pub_mem(Data dt) {
+	myMutex.lock();
+
 	if (pub_mem.size() >= pub_max_size) {
+		myMutex.unlock();
 		return false;
 	}
 	else {
 		pub_mem.push_back(dt);
+		myMutex.unlock();
 		return true;
 	}
 }
@@ -34,11 +38,15 @@ int AgentMemory::get_pri_index_rep_more_than() {
 }
 
 int AgentMemory::get_pub_index_rep_more_than() {
+	myMutex.lock();
+
 	for (int i = 0; i<pub_mem.size(); i++) {
 		if (pub_mem[i].replication_num > 0) {
+			myMutex.unlock();
 			return i;
 		}
 	}
+	myMutex.unlock();
 	return -1;
 }
 
@@ -51,20 +59,34 @@ bool AgentMemory::space_in_pri() {
 }
 
 bool AgentMemory::space_in_pub() {
+	myMutex.lock();
+
 	if (pub_mem.size() < pub_max_size) {
+		myMutex.unlock();
 		return true;
 	}
+	myMutex.unlock();
 	return false;
 }
 
 
 bool AgentMemory::pub_has_data_id(int did) {
+	myMutex.lock();
+
 	for (int i = 0; i < pub_mem.size(); i++) {
 		if (pub_mem[i].id == did) {
+			myMutex.unlock();
 			return true;
 		}
 	}
+	myMutex.unlock();
 	return false;
+}
+
+void AgentMemory::remove_pub(int index) {
+	myMutex.lock();
+	pub_mem.erase(pub_mem.begin() + index);
+	myMutex.unlock();
 }
 
 

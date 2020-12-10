@@ -1,6 +1,8 @@
 #include "Agent.h"
 const double pi = 2 * acos(0.0);
 const float threashold = 3;
+const float chance_pub_rep = 0.01;
+const float chance_pri_rep = 0.1;
 
 Agent::Agent() {
 }
@@ -16,7 +18,8 @@ Agent::Agent(int aid, float ax, float ay, float afacing) {
 };
 
 void Agent::step(vector<Agent*> swarm) {
-	move(0.001, 0.0001 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.0004 - 0.0001))));
+
+	move(-0.001 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.004 - -0.001))), 0.0002);
 	//move(0.01, 0.001);
 	//message(swarm, Packet(1, id, -1));
 
@@ -70,9 +73,20 @@ void Agent::step(vector<Agent*> swarm) {
 
 		// If above threshold then suicide
 		if (heuristic >= threashold) {
-			mem->pub_mem.erase(mem->pub_mem.begin() + i);
-			conns.push_back(pair<int, pair<Coord, Coord>>(3, pair<Coord, Coord>(body.center, Coord(0, 0))));
+			mem->remove_pub(i);
+			conns.push_back(pair<int, pair<Coord, Coord>>(4, pair<Coord, Coord>(body.center, Coord(0, 0))));
 		}
+	}
+
+	// Chance to increase rep number
+	float rando = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 - 0)));
+
+	if (mem->get_pub_index_rep_more_than() == -1 && rando <= chance_pub_rep && mem->pub_mem.size() != 0) {
+		mem->pub_mem[rand() % mem->pub_mem.size()].replication_num++;
+	}
+
+	if (mem->get_pri_index_rep_more_than() == -1 && rando <= chance_pri_rep && mem->pri_mem.size() != 0) {
+		mem->pri_mem[rand() % mem->pri_mem.size()].replication_num++;
 	}
 
 	// TODO: Here
@@ -147,7 +161,7 @@ vector<Packet> Agent::message(vector<Agent*> swarm, Packet packet) {
 				conns.push_back(pair<int, pair<Coord, Coord>>(2, pair<Coord, Coord>(body.center, swarm[i]->body.center)));
 			}
 			else if (packet.type == 2 && temp.type == 0) {
-				conns.push_back(pair<int, pair<Coord, Coord>>(1, pair<Coord, Coord>(body.center, swarm[i]->body.center)));
+				conns.push_back(pair<int, pair<Coord, Coord>>(3, pair<Coord, Coord>(body.center, swarm[i]->body.center)));
 			}
 
 		}

@@ -9,6 +9,7 @@ Packet types
 0 - False
 1 - True
 2 - Replicate data
+3 - Have data
 
 */
 class Packet

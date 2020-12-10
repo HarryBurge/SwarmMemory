@@ -24,6 +24,10 @@ public:
         y = ty;
     }
 
+    float distance(Coord target) {
+        return sqrt(pow((x - target.x), 2) + pow((y - target.y), 2));
+    }
+
     /*
     void rotate_around_another_coord(Coord c, float angle) {
         y = sin(angle) * (x - c.x) + cos(angle) * (y - c.y) + c.y;

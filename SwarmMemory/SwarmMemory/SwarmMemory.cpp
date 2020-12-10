@@ -11,7 +11,7 @@
 #include "Visuals.h"
 #include "Agent.h"
 using namespace std;
-const int num_swarm = 50;
+const int num_swarm = 100;
 const bool draw_conn_circles = false;
 const bool draw_conn_connections = true;
 
@@ -29,7 +29,7 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
 {
 
     //Debug
-    swarm[0]->mem->push_pri_mem(Data(1, 0, 10, 1));
+    swarm[0]->mem->push_pri_mem(Data(1, 0, 10, 1, Coord(0, 0)));
 
     while (!glfwWindowShouldClose(window))
     {
@@ -40,7 +40,7 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
             for (int i = 0; i < swarm.size(); i++) {
                 for (int j = 0; j < swarm.size(); j++) {
                     if (swarm[i]->id != swarm[j]->id && swarm[j]->conn_area.point_in_circle(swarm[i]->body.center)) {
-                        render_line(swarm[i]->body.center, swarm[j]->body.center, 0.2, 0.2, 0.2);
+                        render_line(swarm[i]->body.center, swarm[j]->body.center, 0.4, 0.4, 0.4);
                     }
                 }
             }
@@ -49,16 +49,28 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
         //Drawing current transfers
         for (int i = 0; i < swarm.size(); i++) {
             while (swarm[i]->conns.size() != 0) {
-                pair<Coord, Coord> line = swarm[i]->conns.back();
-                render_line(line.first, line.second, 0, 1, 1);
+                pair<int, pair<Coord, Coord>> line = swarm[i]->conns.back();
+
+                if (line.first == 1) {
+                    render_line(line.second.first, line.second.second, 0, 0.5, 1);
+                }
+                else if (line.first == 2) {
+                    render_line(line.second.first, line.second.second, 0, 1, 1);
+                }
+                else if (line.first == 3) {
+                    render_line(line.second.first, line.second.second, 1, 1, 1);
+                }
                 swarm[i]->conns.pop_back();
             }
         }
 
         //Drawing agents
         for (int i = 0; i < swarm.size(); i++) {
-            //cout << swarm[i]->to_string() << endl;
             render_circle(swarm[i]->body, 20, 1, 1, 0, true);
+
+            if (i == 0) {
+                render_circle(swarm[i]->body, 20, 1, 1, 1, true);
+            }
             if (draw_conn_circles) {
                 render_circle(swarm[i]->conn_area, 20, 1, 0, 0, false);
             }
@@ -77,7 +89,29 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
         glfwSwapBuffers(window);
         glfwPollEvents();
 
-        //Sleep(1000);
+        //for (int i = 0; i < swarm.size(); i++) {
+        //    for (int j = 0; j < swarm[i]->mem->pub_mem.size(); j++) {
+        //        if (swarm[i]->mem->pub_mem[j].replication_num > 0) {
+        //            cout << swarm[i]->to_string() << endl;
+        //        }
+        //    }
+        //}
+
+        int counter = 0;
+
+        for (int i = 0; i < swarm.size(); i++) {
+            if (swarm[i]->mem->pub_has_data_id(1)) {
+                counter++;
+            }
+        }
+
+        cout << counter << endl;
+
+        string tom;
+        cin >> tom;
+
+
+       //Sleep(100);
     }
     return 0;
 }
@@ -113,21 +147,15 @@ int main()
         swarm.push_back(new Agent(i, x, y, f));
     }
 
-    //vector<thread> threads;
+    //int i = 0;
 
-    ///* Put agents execution onto diffrent threads */
-    //for (int i = 0; i < num_swarm; i++) {
-    //    threads.push_back( thread( &Agent::run, swarm[i], swarm) );
-    //    threads.back().detach();
+    //for (float x = -0.8; x < 0.81; x += 0.15) {
+    //    for (float y = -0.8; y < 0.81; y += 0.15) {
+    //        float f = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (6 - 0)));
+    //        i++;
+    //        swarm.push_back(new Agent(i, x, y, f));
+    //    }
     //}
-
-
-    //TODO: Need to make policy for public memory spread
-    //TODO: Make recieve have more infomation to it like an opcode for whether to store or what
-    //TODO: Possibly have some sort of jump thing on the packet
-    //TODO: Create a poll info thing
-    //TODO: Detect if a swarm member goes down
-
 
 
     /* The main control loop */

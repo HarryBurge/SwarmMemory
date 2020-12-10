@@ -15,7 +15,7 @@ public:
 
 	Circle body;
 	Circle conn_area;
-	vector<pair<Coord, Coord>> conns;
+	vector<pair<int, pair<Coord, Coord>>> conns;
 
 	AgentMemory* mem;
 	

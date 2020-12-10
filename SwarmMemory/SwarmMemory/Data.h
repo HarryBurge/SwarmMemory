@@ -1,4 +1,5 @@
 #include <string>
+#include "Util.cpp"
 #pragma once
 class Data
 {
@@ -7,10 +8,11 @@ public:
 	int data;
 	int replication_num;
 	int creator_id;
-	bool locked;
+
+	Coord target_area;
 
 	Data();
-	Data(int, int, int, int);
+	Data(int, int, int, int, Coord);
 
 	std::string to_string();
 };

@@ -1,8 +1,8 @@
 #include "Agent.h"
 const double pi = 2 * acos(0.0);
 const float threashold = 3;
-const float chance_pub_rep = 0.01;
-const float chance_pri_rep = 0.1;
+const float chance_pub_rep = 0.001;
+const float chance_pri_rep = 0.01;
 
 Agent::Agent() {
 }
@@ -24,7 +24,7 @@ void Agent::step(vector<Agent*> swarm) {
 	//message(swarm, Packet(1, id, -1));
 
 	// Replicate private memory item
-	if (mem->get_pri_index_rep_more_than() != -1) {
+	if (mem->get_pri_index_rep_more_than() != -1){
 		// Replicate
 		vector<Packet> collect = message(swarm, Packet(mem->pri_mem[mem->get_pri_index_rep_more_than()], 2, id, -1));
 
@@ -54,11 +54,14 @@ void Agent::step(vector<Agent*> swarm) {
 			}
 		}
 	}
+
 	
-	// Suicide
-	for (int i = 0; i < mem->pub_mem.size(); i++) {
+	// Suicide check random item in pub mem
+	if (mem->pub_mem.size() > 0) {
+		int ind_d = rand() % mem->pub_mem.size();
+
 		// Count how many repliceres around
-		vector<Packet> collect = message(swarm, Packet(mem->pub_mem[i], 3, id, -1));
+		vector<Packet> collect = message(swarm, Packet(mem->pub_mem[ind_d], 3, id, -1));
 
 		int counter = 0;
 
@@ -69,11 +72,11 @@ void Agent::step(vector<Agent*> swarm) {
 		}
 
 		// if not locked then check heruristic
-		float heuristic = counter * (1 / body.center.distance(mem->pub_mem[i].target_area));
+		float heuristic = counter * (1 / body.center.distance(mem->pub_mem[ind_d].target_area));
 
 		// If above threshold then suicide
 		if (heuristic >= threashold) {
-			mem->remove_pub(i);
+			mem->remove_pub(ind_d);
 			conns.push_back(pair<int, pair<Coord, Coord>>(4, pair<Coord, Coord>(body.center, Coord(0, 0))));
 		}
 	}

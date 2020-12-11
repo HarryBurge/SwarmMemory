@@ -12,8 +12,16 @@
 #include "Agent.h"
 using namespace std;
 const int num_swarm = 100;
+
 const bool draw_conn_circles = false;
 const bool draw_conn_connections = true;
+
+const float lose_agent = -0.1;
+
+const int data_at_start = 500;
+
+const float data_going_random = 0.1;
+const int data_during = 0;
 
 
 /* Key call back for window control */
@@ -53,18 +61,7 @@ void draw_agent_stuffs(vector<Agent*> swarm, int i) {
     }
 
     //Drawing agents
-    float r = 0.6;
-    float g = 0.6;
-    float b = 0.0;
-
-    if (swarm[i]->mem->pub_has_data_id(1)) {
-        g = 1;
-    }
-    if (swarm[i]->mem->pub_has_data_id(2)) {
-        b = 1;
-    }
-
-    render_circle(swarm[i]->body, 20, r, g, b, true);
+    render_circle(swarm[i]->body, 20, 1, 1, 0, true);
 
     if (i <= 1) {
         render_circle(swarm[i]->body, 20, 1, 1, 1, true);
@@ -78,21 +75,49 @@ void draw_agent_stuffs(vector<Agent*> swarm, int i) {
 /* Main control loop - Basically iterator */
 int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
 {
+    int data_going = 0;
 
-    //Debug
-    swarm[0]->mem->push_pri_mem(Data(1, 0, 4, 1, Coord(0, 0)));
-    swarm[1]->mem->push_pri_mem(Data(2, 1, 4, 1, Coord(0, 0)));
+    /* Random data at the start */
+    for (int i = 0; i < data_at_start; i++) {
+        bool yn = true;
 
-    while (!glfwWindowShouldClose(window))
+        while (yn) {
+            int ind_a = rand() % swarm.size();
+
+            if (swarm[ind_a]->mem->space_in_pri()) {
+                swarm[ind_a]->mem->push_pri_mem(Data(i, ind_a, 4, 0, Coord(0, 0)));
+                yn = false;
+            }
+        }
+    }
+
+    while (!glfwWindowShouldClose(window) && swarm.size() > 0)
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
         vector<thread> threads;
 
+        /* Random data learn */
+        float rando = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 - 0)));
+
+        if (rando < data_going_random && data_going <= data_during) {
+            data_going++;
+            bool yn = true;
+
+            while (yn) {
+                int ind_a = rand() % swarm.size();
+
+                if (swarm[ind_a]->mem->space_in_pri()) {
+                    swarm[ind_a]->mem->push_pri_mem(Data(data_at_start - 1 + data_going, ind_a, 4, 0, Coord(0, 0)));
+                    yn = false;
+                }
+            }
+        }
+
+        /* Draw last frame */
         for (int i = 0; i < swarm.size(); i++) {
             draw_agent_stuffs(swarm, i);
         }
-
 
         /* step simulation */
         tbb::parallel_for(tbb::blocked_range<int>(0, swarm.size()), [&](tbb::blocked_range<int> r) {
@@ -100,40 +125,35 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
                 swarm[i] -> step(swarm);
             });
 
-        //for (int i = 0; i < swarm.size(); i++) {
-        //    swarm[i]->step(swarm);
-        //}
-
         glfwSwapBuffers(window);
         glfwPollEvents();
 
-        //for (int i = 0; i < swarm.size(); i++) {
-        //    for (int j = 0; j < swarm[i]->mem->pub_mem.size(); j++) {
-        //        if (swarm[i]->mem->pub_mem[j].replication_num > 0) {
-        //            cout << swarm[i]->to_string() << endl;
-        //        }
-        //    }
-        //}
 
-        int counter1 = 0;
-        int counter2 = 0;
+        /* Loss of agent */
+        rando = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 - 0)));
+
+        if (rando < lose_agent) {
+            swarm.pop_back();
+        }
+
+        /* debug */
+        int counter[data_at_start + data_during] = { 0 };
 
         for (int i = 0; i < swarm.size(); i++) {
-            if (swarm[i]->mem->pub_has_data_id(1)) {
-                counter1++;
-            }
-            if (swarm[i]->mem->pub_has_data_id(2)) {
-                counter2++;
+            for (int j = 0; j < data_at_start + data_during; j++) {
+                if (swarm[i]->mem->pub_has_data_id(j + 1)) {
+                    counter[j]++;
+                }
             }
         }
 
-        cout << counter1 << "  " << counter2 << endl;
+        for (int i = 0; i < data_at_start + data_during; i++) {
+            cout << counter[i] << " ";
+        }
+        cout << endl;
 
-        //string tom;
-        //cin >> tom;
-
-
-       //Sleep(100);
+        ///* Debug */
+        //cout << swarm[25]->to_string() << endl;
     }
     return 0;
 }

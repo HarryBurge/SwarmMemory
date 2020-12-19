@@ -8,6 +8,11 @@
 #include "Util.cpp"
 using namespace std;
 
+/* Used to work out bounds for the memory threshold */
+const float max_dupes = 6;
+const float distance_from_point_where_1 = 0.7;
+const float steper = distance_from_point_where_1 / max_dupes;
+
 class Agent
 {
 public:

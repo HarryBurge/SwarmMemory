@@ -1,6 +1,6 @@
 #include "Agent.h"
 const double pi = 2 * acos(0.0);
-const float threashold = 3;
+
 const float chance_pub_rep = 0.001;
 const float chance_pri_rep = 0.01;
 
@@ -20,8 +20,6 @@ Agent::Agent(int aid, float ax, float ay, float afacing) {
 void Agent::step(vector<Agent*> swarm) {
 
 	move(-0.001 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.004 - -0.001))), 0.0002);
-	//move(0.01, 0.001);
-	//message(swarm, Packet(1, id, -1));
 
 	// Replicate private memory item
 	if (mem->get_pri_index_rep_more_than() != -1){
@@ -71,11 +69,16 @@ void Agent::step(vector<Agent*> swarm) {
 			}
 		}
 
-		// if not locked then check heruristic
-		float heuristic = counter * (1 / body.center.distance(mem->pub_mem[ind_d].target_area));
+		// Get the maximum number of allowed duplicates in that region based off distance to the data area
+		float to_point = body.center.distance(mem->pub_mem[ind_d].target_area);
+		int max_dupes_in_area = max_dupes+1 - (to_point / steper);
+
+		if (max_dupes_in_area < 0){
+			max_dupes_in_area = 0;
+		}
 
 		// If above threshold then suicide
-		if (heuristic >= threashold) {
+		if (max_dupes_in_area < counter) {
 			mem->remove_pub(ind_d);
 			conns.push_back(pair<int, pair<Coord, Coord>>(4, pair<Coord, Coord>(body.center, Coord(0, 0))));
 		}
@@ -138,16 +141,6 @@ Packet Agent::recieved(Packet packet) {
 	}
 	return Packet(0, packet.recieverid, packet.senderid);
 }
-
-//void Agent::broadcast(vector<Agent*> swarm, Packet packet) {
-//	for (int i = 0; i < swarm.size(); i++) {
-//		if (swarm[i]->id != id && conn_area.point_in_circle(swarm[i]->body.center)) {
-//			if (swarm[i]->recieved(packet).type!=0) {
-//				conns.push_back(pair<Coord,Coord>(body.center, swarm[i]->body.center));
-//			}
-//		}
-//	}
-//}
 
 vector<Packet> Agent::message(vector<Agent*> swarm, Packet packet) {
 	vector<Packet> collect;

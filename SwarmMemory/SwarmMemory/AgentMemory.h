@@ -23,9 +23,6 @@ public:
 	bool push_pri_mem(Data);
 	bool push_pub_mem(Data);
 
-	int get_pri_index_rep_more_than();
-	int get_pub_index_rep_more_than();
-
 	bool space_in_pri();
 	bool space_in_pub();
 

@@ -27,7 +27,7 @@ public:
 	Agent();
 	Agent(int, float, float, float);
 
-	void step(vector<Agent*>);
+	bool step(vector<Agent*>);
 	Packet recieved(Packet);
 
 	string to_string();
@@ -37,6 +37,8 @@ private:
 
 	void move(float, float);
 	vector<Packet> message(vector<Agent*> swarm, Packet packet);
+
+	int allowed_dupes(Data dt);
 };
 
 #endif

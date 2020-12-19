@@ -1,25 +1,4 @@
-﻿  Agent.cpp
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Util.cpp(28,20): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Util.cpp(68,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.h(13,46): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(4,35): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(5,34): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(11,7): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(14,28): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(15,32): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(22,106): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(22,14): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(27,103): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(31,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(43,103): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(47,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(62,74): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(66,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(74,25): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(111,10): warning C4552: '-': result of expression not used
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(114,10): warning C4552: '+': result of expression not used
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.cpp(148,20): warning C4018: '<': signed/unsigned mismatch
-  SwarmMemory.cpp
+﻿  SwarmMemory.cpp
   TBB Warning: tbb.h contains deprecated functionality. For details, please see Deprecated Features appendix in the TBB reference manual.
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
 C:\Users\Burge\Desktop\vcpkg\installed\x86-windows\include\GLFW\glfw3.h(123): message : see previous definition of 'APIENTRY'
@@ -45,5 +24,4 @@ C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(150,2
 C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(174,27): warning C4018: '<': signed/unsigned mismatch
 C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(217,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
 C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(218,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  Generating Code...
   SwarmMemory.vcxproj -> C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\Debug\SwarmMemory.exe

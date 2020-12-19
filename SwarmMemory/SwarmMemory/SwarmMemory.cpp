@@ -104,7 +104,7 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
                 float x = -0.6 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.6 - -0.6)));
                 float y = -0.6 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.6 - -0.6)));
 
-                swarm[ind_a]->mem->push_pri_mem(Data(i, ind_a, 4, 0, Coord(x, y)));
+                swarm[ind_a]->mem->push_pri_mem(Data(i, ind_a, 0, Coord(x, y)));
 
                 // Visuals
                 data_areas.push_back(Coord(x, y));

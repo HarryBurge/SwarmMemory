@@ -73,6 +73,19 @@ bool AgentMemory::pri_has_data_id(int did) {
 	return false;
 }
 
+Data AgentMemory::get_pub_id(int did) {
+	myMutex.lock();
+
+	for (int i = 0; i < pub_mem.size(); i++) {
+		if (pub_mem[i].id == did) {
+			myMutex.unlock();
+			return pub_mem[i];
+		}
+	}
+	myMutex.unlock();
+	return Data();
+}
+
 void AgentMemory::remove_pub(int index) {
 	myMutex.lock();
 	pub_mem.erase(pub_mem.begin() + index);

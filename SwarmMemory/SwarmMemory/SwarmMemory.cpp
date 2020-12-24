@@ -6,12 +6,17 @@
 #include <string>
 #include <vector>
 #include <thread>
+#include <fstream>
+#include <numeric>
 
 #include "Util.cpp"
 #include "Visuals.h"
 #include "Agent.h"
 using namespace std;
-const int num_swarm = 20;
+
+const string filename = "SimpleSuicideReplication.csv";
+
+const int num_swarm = 50;
 
 /* Visual stuff */
 const bool draw_conn_circles = false;
@@ -21,7 +26,7 @@ const bool draw_conn_connections = true;
 const float lose_agent = -0.001;
 
 /* Amount of data to start with in begining*/
-const int data_at_start = 2;
+const int data_at_start = 1;
 
 /* Chance to produce data, and amount to go up to*/
 const float data_going_random = 0.1;
@@ -29,6 +34,7 @@ const int data_during = 0;
 
 /* Test iterator */
 int iterations = 0;
+const int runtime = 10000;
 
 
 /* Key call back for window control */
@@ -91,6 +97,19 @@ void draw_agent_stuffs(vector<Agent*> swarm, int i) {
 /* Main control loop - Basically iterator */
 int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
 {
+    /* Logging */
+    ofstream outputFile;
+
+    outputFile.open(filename);
+    outputFile << "iteration,";
+
+    for (int i = 0; i < data_at_start + data_during; i++) {
+        outputFile << "c" << i << ",m" << i << ",s" << i << ",mx" << i << ",mn" << i;
+    }
+
+    outputFile << "\n";
+
+
     //int data_going = 0;
 
     vector<Coord> data_areas;
@@ -155,10 +174,14 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
         }
 
         /* step simulation */
-        tbb::parallel_for(tbb::blocked_range<int>(0, swarm.size()), [&](tbb::blocked_range<int> r) {
-            for (int i = r.begin(); i < r.end(); ++i)
-                swarm[i] -> step(swarm);
-            });
+        //tbb::parallel_for(tbb::blocked_range<int>(0, swarm.size()), [&](tbb::blocked_range<int> r) {
+        //    for (int i = r.begin(); i < r.end(); ++i)
+        //        swarm[i] -> step(swarm);
+        //    });
+
+        for (int i = 0; i < swarm.size(); i++) {
+            swarm[i]->step(swarm);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -173,25 +196,49 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
 
         /* debug */
         int counter[data_at_start + data_during] = { 0 };
+        
+        vector<float> dists_per_data[data_at_start + data_during];
 
         for (int i = 0; i < swarm.size(); i++) {
             for (int j = 0; j < data_at_start + data_during; j++) {
                 if (swarm[i]->mem->pub_has_data_id(j)) {
                     counter[j]++;
+                    dists_per_data[j].push_back(swarm[i]->body.center.distance(swarm[i]->mem->get_pub_id(j).target_area));
                 }
             }
         }
 
         cout << iterations << " ";
+        outputFile << iterations;
         for (int i = 0; i < data_at_start + data_during; i++) {
             cout << counter[i] << " ";
+            outputFile << "," << counter[i];
+
+            double sum = std::accumulate(dists_per_data[i].begin(), dists_per_data[i].end(), 0.0);
+            double mean = sum / dists_per_data[i].size();
+
+            double sq_sum = std::inner_product(dists_per_data[i].begin(), dists_per_data[i].end(), dists_per_data[i].begin(), 0.0);
+            double stdev = std::sqrt(sq_sum / dists_per_data[i].size() - mean * mean);
+
+            double max = *max_element(std::begin(dists_per_data[i]), std::end(dists_per_data[i]));
+            double min = *min_element(std::begin(dists_per_data[i]), std::end(dists_per_data[i]));
+
+            cout << mean << " " << stdev << " " << max << " " << min;
+            outputFile << "," << mean << "," << stdev << "," << max << "," << min;
         }
         cout << endl;
+        outputFile << "\n";
 
         ///* Debug */
         //cout << swarm[25]->to_string() << endl;
 
         iterations++;
+
+        if (iterations > runtime) {
+            outputFile.close();
+            return 0;
+        }
+
     }
     return 0;
 }

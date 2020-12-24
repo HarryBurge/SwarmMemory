@@ -4,22 +4,22 @@ C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\shared\minwindef.h(1
 C:\Users\Burge\Desktop\vcpkg\installed\x86-windows\include\GLFW\glfw3.h(123): message : see previous definition of 'APIENTRY'
 C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Util.cpp(28,20): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
 C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Util.cpp(68,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Agent.h(13,46): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(21,32): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(27,36): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(44,27): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(46,88): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(56,77): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(71,18): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(72,18): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(73,18): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(76,16): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(80,16): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(124,27): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(127,113): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(130,113): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(153,27): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(177,27): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(223,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(224,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(26,32): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(32,36): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(50,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(52,88): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(62,77): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(77,18): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(78,18): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(79,18): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(82,16): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(86,16): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(143,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(146,113): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(149,113): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(172,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(182,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(202,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(270,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(271,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   SwarmMemory.vcxproj -> C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\Debug\SwarmMemory.exe

@@ -29,6 +29,8 @@ public:
 	bool pub_has_data_id(int);
 	bool pri_has_data_id(int did);
 
+	Data get_pub_id(int);
+
 	void remove_pub(int);
 
 	string to_string();

@@ -1,6 +1,6 @@
 #include "Agent.h"
 const double pi = 2 * acos(0.0);
-const float chance_pub_rep = 1;
+const float chance_pub_rep = 0.01;
 
 
 int Agent::allowed_dupes(Data dt) {
@@ -89,18 +89,18 @@ bool Agent::step(vector<Agent*> swarm) {
 	// If dupes, do we need more duplicates
 	else if (counter < allowed_dupes(mem->pub_mem[rand_pub])) {
 
-		for (int i = 0; i < swarm.size(); i++) {
-			vector<Packet> temp = message(swarm, Packet(mem->pub_mem[rand_pub], 2, id, swarm[i]->id));
+		//for (int i = 0; i < swarm.size(); i++) {
+		//	vector<Packet> temp = message(swarm, Packet(mem->pub_mem[rand_pub], 2, id, swarm[i]->id));
 
-			if (temp.size() > 0 && temp[0].type == 1) {
-				break;
-			}
-		}
-		//message(swarm, Packet(mem->pub_mem[rand_pub], 2, id, -1));
+		//	if (temp.size() > 0 && temp[0].type == 1) {
+		//		break;
+		//	}
+		//}
+		message(swarm, Packet(mem->pub_mem[rand_pub], 2, id, -1));
 	}
 
 	// If too many dupes suicide
-	else if (counter > 1 && counter > allowed_dupes(mem->pub_mem[rand_pub])) {
+	else if (counter > allowed_dupes(mem->pub_mem[rand_pub])) {
 		mem->remove_pub(rand_pub);
 		//conns.push_back(pair<int, pair<Coord, Coord>>(4, pair<Coord, Coord>(body.center, Coord(0, 0))));
 	}

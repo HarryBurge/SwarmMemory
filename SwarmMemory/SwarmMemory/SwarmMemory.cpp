@@ -26,7 +26,7 @@ const bool draw_conn_connections = true;
 const float lose_agent = -0.001;
 
 /* Amount of data to start with in begining*/
-const int data_at_start = 1;
+const int data_at_start = 4;
 
 /* Chance to produce data, and amount to go up to*/
 const float data_going_random = 0.1;
@@ -101,10 +101,10 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
     ofstream outputFile;
 
     outputFile.open(filename);
-    outputFile << "iteration,";
+    outputFile << "iteration";
 
     for (int i = 0; i < data_at_start + data_during; i++) {
-        outputFile << "c" << i << ",m" << i << ",s" << i << ",mx" << i << ",mn" << i;
+        outputFile << ",c" << i << ",m" << i << ",s" << i << ",mx" << i << ",mn" << i;
     }
 
     outputFile << "\n";
@@ -142,12 +142,7 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
 
         for (int i = 0; i < data_areas.size(); i++) {
             for (int j = 0; j < max_dupes+1; j++) {
-                if (i == 0) {
-                    render_circle(Circle(data_areas[i].x, data_areas[i].y, 0 + j * steper), 20, 0, 0, 0.6, false);
-                }
-                else if (i == 1) {
-                    render_circle(Circle(data_areas[i].x, data_areas[i].y, 0 + j * steper), 20, 0, 0.6, 0, false);
-                }
+                render_circle(Circle(data_areas[i].x, data_areas[i].y, 0 + j * steper), 20, 0, 0, 0.6, false);
             }
         }
 
@@ -208,10 +203,10 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
             }
         }
 
-        cout << iterations << " ";
+        cout << iterations;
         outputFile << iterations;
         for (int i = 0; i < data_at_start + data_during; i++) {
-            cout << counter[i] << " ";
+            cout << " " << counter[i] << " ";
             outputFile << "," << counter[i];
 
             double sum = std::accumulate(dists_per_data[i].begin(), dists_per_data[i].end(), 0.0);
@@ -223,7 +218,7 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
             double max = *max_element(std::begin(dists_per_data[i]), std::end(dists_per_data[i]));
             double min = *min_element(std::begin(dists_per_data[i]), std::end(dists_per_data[i]));
 
-            cout << mean << " " << stdev << " " << max << " " << min;
+            //cout << mean << " " << stdev << " " << max << " " << min;
             outputFile << "," << mean << "," << stdev << "," << max << "," << min;
         }
         cout << endl;

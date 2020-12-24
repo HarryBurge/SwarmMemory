@@ -6,7 +6,7 @@ const float chance_pub_rep = 1;
 int Agent::allowed_dupes(Data dt) {
 	// Get the maximum number of allowed duplicates in that region based off distance to the data area
 	float to_point = body.center.distance(dt.target_area);
-	int max_dupes_in_area = max_dupes+1 - (to_point / steper);
+	int max_dupes_in_area = max_dupes - (to_point / steper);
 
 	if (max_dupes_in_area < 0){
 		max_dupes_in_area = 0;
@@ -63,7 +63,7 @@ bool Agent::step(vector<Agent*> swarm) {
 	//~~~~~
 
 
-	/* Replicate if required */
+	/* Count dupes */
 	vector<Packet> collect = message(swarm, Packet(mem->pub_mem[rand_pub], 3, id, -1));
 
 	int counter = 0;
@@ -73,7 +73,10 @@ bool Agent::step(vector<Agent*> swarm) {
 			counter++;
 		}
 	}
+	//~~~~~
 
+
+	/* Replicate and suicide choice */
 	// No dupes around, random chance to replicate
 	if (counter == 0) {
 		float rando = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 - 0)));
@@ -85,10 +88,23 @@ bool Agent::step(vector<Agent*> swarm) {
 	
 	// If dupes, do we need more duplicates
 	else if (counter < allowed_dupes(mem->pub_mem[rand_pub])) {
-		message(swarm, Packet(mem->pub_mem[rand_pub], 2, id, -1));
-	}
-	//~~~~~
 
+		for (int i = 0; i < swarm.size(); i++) {
+			vector<Packet> temp = message(swarm, Packet(mem->pub_mem[rand_pub], 2, id, swarm[i]->id));
+
+			if (temp.size() > 0 && temp[0].type == 1) {
+				break;
+			}
+		}
+		//message(swarm, Packet(mem->pub_mem[rand_pub], 2, id, -1));
+	}
+
+	// If too many dupes suicide
+	else if (counter > 1 && counter > allowed_dupes(mem->pub_mem[rand_pub])) {
+		mem->remove_pub(rand_pub);
+		//conns.push_back(pair<int, pair<Coord, Coord>>(4, pair<Coord, Coord>(body.center, Coord(0, 0))));
+	}
+	
 
 
 
@@ -205,7 +221,7 @@ Packet Agent::recieved(Packet packet) {
 			return Packet(1, id, packet.senderid);
 		}
 
-		if (packet.type == 2 && mem->space_in_pub() && packet.data.creator_id != id && !mem->pub_has_data_id(packet.data.id)) {
+		if (packet.type == 2 && mem->space_in_pub() && packet.data.creator_id != id && !mem->pub_has_data_id(packet.data.id) && !mem->pri_has_data_id(packet.data.id)) {
 			mem->push_pub_mem(packet.data);
 			return Packet(1, id, packet.senderid);
 		}

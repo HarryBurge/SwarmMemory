@@ -11,14 +11,14 @@
 #include "Visuals.h"
 #include "Agent.h"
 using namespace std;
-const int num_swarm = 100;
+const int num_swarm = 20;
 
 /* Visual stuff */
 const bool draw_conn_circles = false;
 const bool draw_conn_connections = true;
 
 /* Chance to lose agent */
-const float lose_agent = -0.1;
+const float lose_agent = -0.001;
 
 /* Amount of data to start with in begining*/
 const int data_at_start = 2;
@@ -26,6 +26,9 @@ const int data_at_start = 2;
 /* Chance to produce data, and amount to go up to*/
 const float data_going_random = 0.1;
 const int data_during = 0;
+
+/* Test iterator */
+int iterations = 0;
 
 
 /* Key call back for window control */
@@ -101,13 +104,13 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
 
             if (swarm[ind_a]->mem->space_in_pri()) {
 
-                float x = -0.6 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.6 - -0.6)));
-                float y = -0.6 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.6 - -0.6)));
+                //float x = -0.6 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.6 - -0.6)));
+                //float y = -0.6 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.6 - -0.6)));
 
-                swarm[ind_a]->mem->push_pri_mem(Data(i, ind_a, 0, Coord(x, y)));
+                swarm[ind_a]->mem->push_pri_mem(Data(i, ind_a, 0, Coord(swarm[ind_a]->body.center.x, swarm[ind_a]->body.center.y)));
 
                 // Visuals
-                data_areas.push_back(Coord(x, y));
+                data_areas.push_back(Coord(swarm[ind_a]->body.center.x, swarm[ind_a]->body.center.y));
 
                 yn = false;
             }
@@ -129,8 +132,8 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
             }
         }
 
-        ///* Random data learn */
-        //float rando = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 - 0)));
+        /* Random data learn */
+        float rando = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 - 0)));
 
         //if (rando < data_going_random && data_going <= data_during) {
         //    data_going++;
@@ -161,12 +164,12 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
         glfwPollEvents();
 
 
-        ///* Loss of agent */
-        //rando = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 - 0)));
+        /* Loss of agent */
+        rando = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 - 0)));
 
-        //if (rando < lose_agent) {
-        //    swarm.pop_back();
-        //}
+        if (rando < lose_agent && iterations > 100) {
+            swarm.pop_back();
+        }
 
         /* debug */
         int counter[data_at_start + data_during] = { 0 };
@@ -179,6 +182,7 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
             }
         }
 
+        cout << iterations << " ";
         for (int i = 0; i < data_at_start + data_during; i++) {
             cout << counter[i] << " ";
         }
@@ -186,6 +190,8 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
 
         ///* Debug */
         //cout << swarm[25]->to_string() << endl;
+
+        iterations++;
     }
     return 0;
 }

@@ -27,6 +27,7 @@ public:
 	bool space_in_pub();
 
 	bool pub_has_data_id(int);
+	bool pri_has_data_id(int did);
 
 	void remove_pub(int);
 

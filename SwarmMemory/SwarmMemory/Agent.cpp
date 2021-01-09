@@ -1,6 +1,6 @@
 #include "Agent.h"
 const double pi = 2 * acos(0.0);
-const float chance_pub_rep = 0.01;
+const float chance_pub_rep = 0.1;
 
 
 int Agent::allowed_dupes(Data dt) {
@@ -78,7 +78,7 @@ bool Agent::step(vector<Agent*> swarm) {
 
 	/* Replicate and suicide choice */
 	// No dupes around, random chance to replicate
-	if (counter == 0) {
+	if (counter == allowed_dupes(mem->pub_mem[rand_pub])) {
 		float rando = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 - 0)));
 
 		if (rando <= chance_pub_rep) {

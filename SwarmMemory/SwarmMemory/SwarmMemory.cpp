@@ -23,10 +23,10 @@ const bool draw_conn_circles = false;
 const bool draw_conn_connections = true;
 
 /* Chance to lose agent */
-const float lose_agent = -0.001;
+const float lose_agent = -0.003;
 
 /* Amount of data to start with in begining*/
-const int data_at_start = 4;
+const int data_at_start = 1;
 
 /* Chance to produce data, and amount to go up to*/
 const float data_going_random = 0.1;
@@ -79,11 +79,11 @@ void draw_agent_stuffs(vector<Agent*> swarm, int i) {
     float b = 0.2;
 
     if (swarm[i]->mem->pub_has_data_id(0)) {
-        b = 0.6;
+        b = 0.8;
     }
 
     if (swarm[i]->mem->pub_has_data_id(1)) {
-        g = 0.6;
+        g = 0.8;
     }
 
     render_circle(swarm[i]->body, 20, r, g, b, true);
@@ -102,6 +102,8 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
 
     outputFile.open(filename);
     outputFile << "iteration";
+
+    outputFile << ",n_agents";
 
     for (int i = 0; i < data_at_start + data_during; i++) {
         outputFile << ",c" << i << ",m" << i << ",s" << i << ",mx" << i << ",mn" << i;
@@ -139,6 +141,9 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
     while (!glfwWindowShouldClose(window) && swarm.size() > 0)
     {
         glClear(GL_COLOR_BUFFER_BIT);
+
+        // Background Colour
+        render_circle(Circle(0,0,2), 10, 1, 1, 1, true);
 
         for (int i = 0; i < data_areas.size(); i++) {
             for (int j = 0; j < max_dupes+1; j++) {
@@ -205,6 +210,9 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
 
         cout << iterations;
         outputFile << iterations;
+
+        outputFile << "," << swarm.size();
+
         for (int i = 0; i < data_at_start + data_during; i++) {
             cout << " " << counter[i] << " ";
             outputFile << "," << counter[i];
@@ -221,6 +229,8 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
             //cout << mean << " " << stdev << " " << max << " " << min;
             outputFile << "," << mean << "," << stdev << "," << max << "," << min;
         }
+
+
         cout << endl;
         outputFile << "\n";
 

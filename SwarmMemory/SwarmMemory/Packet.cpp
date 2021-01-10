@@ -17,6 +17,13 @@ Packet::Packet(int t, int sid, int rid) {
 	recieverid = rid;
 }
 
+Packet::Packet(int t, int sid, int rid, int add) {
+	type = t;
+	senderid = sid;
+	recieverid = rid;
+	additional = add;
+}
+
 Packet::Packet(Data dt, int t, int sid, int rid) {
 	data = dt;
 	type = t;

@@ -1,19 +1,5 @@
 #include "Agent.h"
 const double pi = 2 * acos(0.0);
-const float chance_pub_rep = 0.1;
-
-
-int Agent::allowed_dupes(Data dt) {
-	// Get the maximum number of allowed duplicates in that region based off distance to the data area
-	float to_point = body.center.distance(dt.target_area);
-	int max_dupes_in_area = max_dupes - (to_point / steper);
-
-	if (max_dupes_in_area < 0){
-		max_dupes_in_area = 0;
-	}
-
-	return max_dupes_in_area;
-};
 
 Agent::Agent() {
 }
@@ -21,18 +7,19 @@ Agent::Agent() {
 Agent::Agent(int aid, float ax, float ay, float afacing) {
 	id = aid;
 	facing = afacing;
+	iterator = 0;
 
 	body = Circle(ax, ay, 0.01);
-	conn_area = Circle(ax, ay, 0.2);
+	conn_area = Circle(ax, ay, 0.4);
 
 	mem = new AgentMemory();
 };
 
-bool Agent::step(vector<Agent*> swarm) {
+void Agent::step(vector<Agent*> swarm) {
 
 	move(-0.001 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.004 - -0.001))), 0.0002);
 
-	/* For each private memory if none around replicate to every agent around */
+	/* Private memory replicate if no duplicates around */
 	for (int i = 0; i < mem->pri_mem.size(); i++) {
 		vector<Packet> collect = message(swarm, Packet(mem->pri_mem[i], 3, id, -1));
 
@@ -49,152 +36,74 @@ bool Agent::step(vector<Agent*> swarm) {
 			message(swarm, Packet(mem->pri_mem[i], 2, id, -1));
 		}
 	}
-    //~~~~~
 
 
-	/* Pick random item in public mem */
-	int rand_pub;
+	/* Go through algorithm for item at iterator */
 	if (mem->pub_mem.size() > 0) {
-		rand_pub = rand() % mem->pub_mem.size();
-	}
-	else {
-		return false;
-	}
-	//~~~~~
+		
+		/* Count dupes and get ratio */
+		vector<Packet> collect1 = message(swarm, Packet(mem->pub_mem[iterator], 3, id, -1));
 
+		float current_dupes = 0;
 
-	/* Count dupes */
-	vector<Packet> collect = message(swarm, Packet(mem->pub_mem[rand_pub], 3, id, -1));
-
-	int counter = 0;
-
-	for (int j = 0; j < collect.size(); j++) {
-		if (collect[j].type == 1) {
-			counter++;
+		for (int j = 0; j < collect1.size(); j++) {
+			if (collect1[j].type == 1) {
+				current_dupes++;
+			}
 		}
-	}
-	//~~~~~
 
-
-	/* Replicate and suicide choice */
-	// No dupes around, random chance to replicate
-	if (counter == allowed_dupes(mem->pub_mem[rand_pub])) {
-		float rando = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 - 0)));
-
-		if (rando <= chance_pub_rep) {
-			message(swarm, Packet(mem->pub_mem[rand_pub], 2, id, -1));
+		float dupes_ratio = 0;
+		
+		if (collect1.size() != 0) {
+			dupes_ratio = current_dupes / collect1.size();
 		}
+
+
+		/* Distance to point bounded */
+		float to_point = (2.82843 - body.center.distance(mem->pub_mem[iterator].target_area)) / 2.82843;
+
+
+		/* Available public memory in agents around averaged */
+		float average_public_spare = 0;
+
+		vector<Packet> collect2 = message(swarm, Packet(mem->pub_mem[iterator], 4, id, -1));
+
+		float total_num = 0;
+
+		for (int j = 0; j < collect2.size(); j++) {
+
+			if (collect2[j].type == 1) {
+				average_public_spare += (float) collect2[j].additional;
+				total_num++;
+			}
+
+		}
+
+		if (total_num != 0) {
+			average_public_spare = average_public_spare / total_num;
+		}
+
+		average_public_spare = average_public_spare / pub_max_size;
+
+
+		float b1 = 0.3;
+		float b2 = 0.3;
+		float b3 = 0.3;
+
+		float heuristic = b1 * dupes_ratio + b2 * to_point + b3 * average_public_spare;
+		cout << heuristic << endl;
+
+
 	}
-	
-	// If dupes, do we need more duplicates
-	else if (counter < allowed_dupes(mem->pub_mem[rand_pub])) {
 
-		//for (int i = 0; i < swarm.size(); i++) {
-		//	vector<Packet> temp = message(swarm, Packet(mem->pub_mem[rand_pub], 2, id, swarm[i]->id));
 
-		//	if (temp.size() > 0 && temp[0].type == 1) {
-		//		break;
-		//	}
-		//}
-		message(swarm, Packet(mem->pub_mem[rand_pub], 2, id, -1));
+	/* Update iterater */
+	iterator++;
+
+	if (iterator >= mem->pub_mem.size()) {
+		iterator = 0;
 	}
 
-	// If too many dupes suicide
-	else if (counter > allowed_dupes(mem->pub_mem[rand_pub])) {
-		mem->remove_pub(rand_pub);
-		//conns.push_back(pair<int, pair<Coord, Coord>>(4, pair<Coord, Coord>(body.center, Coord(0, 0))));
-	}
-	
-
-
-
-
-
-
-
-	return true;
-
-	//// Replicate private memory item
-	//if (mem->get_pri_index_rep_more_than() != -1){
-	//	// Replicate
-	//	vector<Packet> collect = message(swarm, Packet(mem->pri_mem[mem->get_pri_index_rep_more_than()], 2, id, -1));
-
-	//	bool all_failed = true;
-
-	//	for (int i = 0; i < collect.size(); i++) {
-	//		if (collect[0].type != 0) {
-	//			all_failed = false;
-	//			mem->pri_mem[mem->get_pri_index_rep_more_than()].replication_num--;
-	//			break;
-	//		}
-	//	}
-	//}
-
-	//// Replicate public memory item
-	//if (mem->get_pub_index_rep_more_than() != -1) {
-	//	//Replicate
-	//	vector<Packet> collect = message(swarm, Packet(mem->pub_mem[mem->get_pub_index_rep_more_than()], 2, id, -1));
-
-	//	bool all_failed = true;
-
-	//	for (int i = 0; i < collect.size(); i++) {
-	//		if (collect[0].type != 0) {
-	//			all_failed = false;
-	//			mem->pub_mem[mem->get_pub_index_rep_more_than()].replication_num--;
-	//			break;
-	//		}
-	//	}
-	//}
-
-	//
-	//// Suicide check random item in pub mem
-	//if (mem->pub_mem.size() > 0) {
-	//	int ind_d = rand() % mem->pub_mem.size();
-
-	//	// Count how many repliceres around
-	//	vector<Packet> collect = message(swarm, Packet(mem->pub_mem[ind_d], 3, id, -1));
-
-	//	int counter = 0;
-
-	//	for (int j = 0; j < collect.size(); j++) {
-	//		if (collect[0].type != 0) {
-	//			counter++;
-	//		}
-	//	}
-
-	//	// Get the maximum number of allowed duplicates in that region based off distance to the data area
-	//	float to_point = body.center.distance(mem->pub_mem[ind_d].target_area);
-	//	int max_dupes_in_area = max_dupes+1 - (to_point / steper);
-
-	//	if (max_dupes_in_area < 0){
-	//		max_dupes_in_area = 0;
-	//	}
-
-	//	// If above threshold then suicide
-	//	if (max_dupes_in_area < counter) {
-	//		mem->remove_pub(ind_d);
-	//		conns.push_back(pair<int, pair<Coord, Coord>>(4, pair<Coord, Coord>(body.center, Coord(0, 0))));
-	//	}
-	//}
-
-	//// Chance to increase rep number
-	//float rando = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 - 0)));
-
-	//if (mem->get_pub_index_rep_more_than() == -1 && rando <= chance_pub_rep && mem->pub_mem.size() != 0) {
-	//	mem->pub_mem[rand() % mem->pub_mem.size()].replication_num++;
-	//}
-
-	//if (mem->get_pri_index_rep_more_than() == -1 && rando <= chance_pri_rep && mem->pri_mem.size() != 0) {
-	//	mem->pri_mem[rand() % mem->pri_mem.size()].replication_num++;
-	//}
-
-	//// TODO: Here
-
-	//// Sucide complete heuristic stuff
-
-	//// If above threshold then do
-
-	//// Optimise
 }
 
 void Agent::move(float dangle, float speed) {
@@ -230,6 +139,10 @@ Packet Agent::recieved(Packet packet) {
 			return Packet(1, id, packet.senderid);
 		}
 
+		if (packet.type == 4 && !mem->pub_has_data_id(packet.data.id)) {
+			return Packet(1, id, packet.senderid, pub_max_size - mem->pub_mem.size());
+		}
+
 	}
 	return Packet(0, id, packet.senderid);
 }
@@ -241,9 +154,9 @@ vector<Packet> Agent::message(vector<Agent*> swarm, Packet packet) {
 		if (swarm[i]->id != id && conn_area.point_in_circle(swarm[i]->body.center)) {
 			Packet temp = swarm[i]->recieved(packet);
 
-			if (temp.type != 0) {
-				collect.push_back(temp);
-			}
+			//if (temp.type != 0) {
+			collect.push_back(temp);
+			//}
 
 			if (packet.type == 2 && temp.type == 1) {
 				conns.push_back(pair<int, pair<Coord, Coord>>(2, pair<Coord, Coord>(body.center, swarm[i]->body.center)));

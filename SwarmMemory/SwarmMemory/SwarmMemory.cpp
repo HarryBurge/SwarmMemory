@@ -15,7 +15,7 @@
 #include "Agent.h"
 using namespace std;
 
-const int num_swarm = 10;
+const int num_swarm = 50;
 
 /* Visual stuff */
 const bool draw_conn_circles = false;
@@ -78,11 +78,11 @@ void draw_agent_stuffs(vector<Agent*> swarm, int i) {
     float b = 0.2;
 
     if (swarm[i]->mem->pub_has_data_id(0)) {
-        b = 0.8;
+        g = 0.8;
     }
 
     if (swarm[i]->mem->pub_has_data_id(1)) {
-        g = 0.8;
+        b = 0.8;
     }
 
     render_circle(swarm[i]->body, 20, r, g, b, true);

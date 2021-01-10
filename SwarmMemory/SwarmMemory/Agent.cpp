@@ -10,7 +10,7 @@ Agent::Agent(int aid, float ax, float ay, float afacing) {
 	iterator = 0;
 
 	body = Circle(ax, ay, 0.01);
-	conn_area = Circle(ax, ay, 0.4);
+	conn_area = Circle(ax, ay, 0.2);
 
 	mem = new AgentMemory();
 };
@@ -86,12 +86,16 @@ void Agent::step(vector<Agent*> swarm) {
 		average_public_spare = average_public_spare / pub_max_size;
 
 
-		float b1 = 0.3;
-		float b2 = 0.3;
-		float b3 = 0.3;
+		float b1 = 0.45;
+		float b2 = 0.45;
+		float b3 = 0.1;
 
-		float heuristic = b1 * dupes_ratio + b2 * to_point + b3 * average_public_spare;
-		cout << heuristic << endl;
+		float heuristic = b1 * (1-dupes_ratio) + b2 * to_point + b3 * average_public_spare;
+		
+
+		if (heuristic > 0.8) {
+			message(swarm, Packet(mem->pub_mem[iterator], 2, id, -1));
+		}
 
 
 	}

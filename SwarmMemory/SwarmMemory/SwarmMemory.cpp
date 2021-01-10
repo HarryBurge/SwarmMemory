@@ -15,7 +15,7 @@
 #include "Agent.h"
 using namespace std;
 
-const int num_swarm = 50;
+const int num_swarm = 100;
 
 /* Visual stuff */
 const bool draw_conn_circles = false;
@@ -25,7 +25,7 @@ const bool draw_conn_connections = true;
 const float lose_agent = -0.003;
 
 /* Amount of data to start with in begining*/
-const int data_at_start = 2;
+const int data_at_start = 1;
 
 /* Chance to produce data, and amount to go up to*/
 const float data_going_random = 0.1;

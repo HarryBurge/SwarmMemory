@@ -60,7 +60,7 @@ void Agent::step(vector<Agent*> swarm) {
 
 
 		/* Distance to point bounded */
-		float to_point = (2.82843 - body.center.distance(mem->pub_mem[iterator].target_area)) / 2.82843;
+		float to_point = body.center.distance(mem->pub_mem[iterator].target_area);
 
 
 		/* Available public memory in agents around averaged */
@@ -90,11 +90,20 @@ void Agent::step(vector<Agent*> swarm) {
 		float b2 = 0.45;
 		float b3 = 0.1;
 
-		float heuristic = b1 * (1-dupes_ratio) + b2 * to_point + b3 * average_public_spare;
+		float heuristic_rep = b1 * (1-dupes_ratio) + b2 * ((2.82843 - to_point) / 2.82843) + b3 * average_public_spare;
 		
 
-		if (heuristic > 0.8) {
+		if (heuristic_rep > 0.8) {
 			message(swarm, Packet(mem->pub_mem[iterator], 2, id, -1));
+		}
+
+		float p1 = 0.5;
+		float p2 = 0.5;
+
+		float heuristic_sui = p1 * dupes_ratio + p2 * (to_point / 2.82843);
+
+		if (heuristic_sui > 0.48) {
+			mem->remove_pub(iterator);
 		}
 
 

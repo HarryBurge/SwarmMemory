@@ -10,7 +10,7 @@ Agent::Agent(int aid, float ax, float ay, float afacing) {
 	iterator = 0;
 
 	body = Circle(ax, ay, 0.01);
-	conn_area = Circle(ax, ay, 0.2);
+	conn_area = Circle(ax, ay, 0.25);
 
 	mem = new AgentMemory();
 };
@@ -102,7 +102,7 @@ void Agent::step(vector<Agent*> swarm) {
 
 		float heuristic_sui = p1 * dupes_ratio + p2 * (to_point / 2.82843);
 
-		if (heuristic_sui > 0.48) {
+		if (heuristic_sui > 0.45) {
 			mem->remove_pub(iterator);
 		}
 

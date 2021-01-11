@@ -15,7 +15,9 @@
 #include "Agent.h"
 using namespace std;
 
-const int num_swarm = 100;
+const string filename = "SimpleSuicideReplication.csv";
+
+const int num_swarm = 50;
 
 /* Visual stuff */
 const bool draw_conn_circles = false;
@@ -33,7 +35,7 @@ const int data_during = 0;
 
 /* Test iterator */
 int iterations = 0;
-const int runtime = 1000000;
+const int runtime = 10000;
 
 
 /* Key call back for window control */
@@ -96,6 +98,20 @@ void draw_agent_stuffs(vector<Agent*> swarm, int i) {
 /* Main control loop - Basically iterator */
 int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
 {
+    /* Logging */
+    ofstream outputFile;
+
+    outputFile.open(filename);
+    outputFile << "iteration";
+
+    outputFile << ",n_agents";
+
+    for (int i = 0; i < data_at_start + data_during; i++) {
+        outputFile << ",c" << i << ",m" << i << ",s" << i << ",mx" << i << ",mn" << i;
+    }
+
+    outputFile << "\n";
+
     vector<Coord> data_areas;
 
     /* random data at the start */
@@ -152,10 +168,52 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
         }
 
 
+
+        /* debug */
+        int counter[data_at_start + data_during] = { 0 };
+
+        vector<float> dists_per_data[data_at_start + data_during];
+
+        for (int i = 0; i < swarm.size(); i++) {
+            for (int j = 0; j < data_at_start + data_during; j++) {
+                if (swarm[i]->mem->pub_has_data_id(j)) {
+                    counter[j]++;
+                    dists_per_data[j].push_back(swarm[i]->body.center.distance(swarm[i]->mem->get_pub_id(j).target_area));
+                }
+            }
+        }
+
+        cout << iterations;
+        outputFile << iterations;
+
+        outputFile << "," << swarm.size();
+
+        for (int i = 0; i < data_at_start + data_during; i++) {
+            cout << " " << counter[i] << " ";
+            outputFile << "," << counter[i];
+
+            double sum = std::accumulate(dists_per_data[i].begin(), dists_per_data[i].end(), 0.0);
+            double mean = sum / dists_per_data[i].size();
+
+            double sq_sum = std::inner_product(dists_per_data[i].begin(), dists_per_data[i].end(), dists_per_data[i].begin(), 0.0);
+            double stdev = std::sqrt(sq_sum / dists_per_data[i].size() - mean * mean);
+
+            double max = *max_element(std::begin(dists_per_data[i]), std::end(dists_per_data[i]));
+            double min = *min_element(std::begin(dists_per_data[i]), std::end(dists_per_data[i]));
+
+            //cout << mean << " " << stdev << " " << max << " " << min;
+            outputFile << "," << mean << "," << stdev << "," << max << "," << min;
+        }
+
+
+        cout << endl;
+        outputFile << "\n";
+
         /* Timing */
         iterations++;
 
         if (iterations > runtime) {
+            outputFile.close();
             return 0;
         }
 

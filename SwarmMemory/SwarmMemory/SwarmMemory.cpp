@@ -204,6 +204,11 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
         iterations++;
 
         if (iterations > runtime) {
+            
+            for (int i = 0; i < data_areas.size(); i++) {
+                outputFile << data_areas[i].x << "," << data_areas[i].y << ",";
+            }
+
             outputFile.close();
             return 0;
         }

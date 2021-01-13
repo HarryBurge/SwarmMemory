@@ -14,10 +14,11 @@ C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(79,18
 C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(80,18): warning C4305: 'initializing': truncation from 'double' to 'float'
 C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(83,16): warning C4305: '=': truncation from 'double' to 'float'
 C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(87,16): warning C4305: '=': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(144,27): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(145,72): warning C4305: 'argument': truncation from 'double' to 'float'
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(149,27): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(177,27): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(248,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(249,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(137,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(138,72): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(142,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(168,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(188,27): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(239,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(240,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   SwarmMemory.vcxproj -> C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\Debug\SwarmMemory.exe

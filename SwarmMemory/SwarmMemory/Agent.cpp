@@ -97,12 +97,12 @@ void Agent::step(vector<Agent*> swarm) {
 			message(swarm, Packet(mem->pub_mem[iterator], 2, id, -1));
 		}
 
-		float p1 = 0.5;
-		float p2 = 0.5;
+		float p1 = 0.3;
+		float p2 = 0.7;
 
 		float heuristic_sui = p1 * dupes_ratio + p2 * (to_point / 2.82843);
 
-		if (heuristic_sui > 0.45) {
+		if (heuristic_sui > 0.37) {
 			mem->remove_pub(iterator);
 		}
 

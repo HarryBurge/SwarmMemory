@@ -102,14 +102,7 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
     ofstream outputFile;
 
     outputFile.open(filename);
-    outputFile << "iteration";
-
-    outputFile << ",n_agents";
-
-    for (int i = 0; i < data_at_start + data_during; i++) {
-        outputFile << ",c" << i << ",m" << i << ",s" << i << ",mx" << i << ",mn" << i;
-    }
-
+    outputFile << "iteration, total_datas, (x,y,c1,...,cn)*";
     outputFile << "\n";
 
     vector<Coord> data_areas;
@@ -172,41 +165,39 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
         /* debug */
         int counter[data_at_start + data_during] = { 0 };
 
-        vector<float> dists_per_data[data_at_start + data_during];
-
         for (int i = 0; i < swarm.size(); i++) {
             for (int j = 0; j < data_at_start + data_during; j++) {
                 if (swarm[i]->mem->pub_has_data_id(j)) {
                     counter[j]++;
-                    dists_per_data[j].push_back(swarm[i]->body.center.distance(swarm[i]->mem->get_pub_id(j).target_area));
                 }
             }
         }
 
         cout << iterations;
-        outputFile << iterations;
-
-        outputFile << "," << swarm.size();
 
         for (int i = 0; i < data_at_start + data_during; i++) {
             cout << " " << counter[i] << " ";
-            outputFile << "," << counter[i];
+        }
+        cout << endl;
 
-            double sum = std::accumulate(dists_per_data[i].begin(), dists_per_data[i].end(), 0.0);
-            double mean = sum / dists_per_data[i].size();
 
-            double sq_sum = std::inner_product(dists_per_data[i].begin(), dists_per_data[i].end(), dists_per_data[i].begin(), 0.0);
-            double stdev = std::sqrt(sq_sum / dists_per_data[i].size() - mean * mean);
+        /* Logging */
+        outputFile << iterations;
+        outputFile << "," << data_at_start + data_during;
 
-            double max = *max_element(std::begin(dists_per_data[i]), std::end(dists_per_data[i]));
-            double min = *min_element(std::begin(dists_per_data[i]), std::end(dists_per_data[i]));
+        for (int i = 0; i < swarm.size(); i++) {
+            outputFile << "," << swarm[i]->body.center.x << "," << swarm[i]->body.center.y;
 
-            //cout << mean << " " << stdev << " " << max << " " << min;
-            outputFile << "," << mean << "," << stdev << "," << max << "," << min;
+            for (int j = 0; j < data_at_start + data_during; j++) {
+                if (swarm[i]->mem->pub_has_data_id(j)) {
+                    outputFile << "," << swarm[i]->body.center.distance(swarm[i]->mem->get_pub_id(j).target_area);
+                }
+                else {
+                    outputFile << ",-1";
+                }
+            }
         }
 
-
-        cout << endl;
         outputFile << "\n";
 
         /* Timing */

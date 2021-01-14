@@ -15,7 +15,7 @@
 #include "Agent.h"
 using namespace std;
 
-const string filename = "SimpleSuicideReplication.csv";
+const string prelimfilename = "SimpleSuicideReplication";
 
 const int num_swarm = 50;
 
@@ -24,10 +24,10 @@ const bool draw_conn_circles = false;
 const bool draw_conn_connections = true;
 
 /* Chance to lose agent */
-const float lose_agent = -0.003;
+const float lose_agent = 0.001;
 
 /* Amount of data to start with in begining*/
-const int data_at_start = 1;
+const int data_at_start = 20;
 
 /* Chance to produce data, and amount to go up to*/
 const float data_going_random = 0.1;
@@ -96,7 +96,7 @@ void draw_agent_stuffs(vector<Agent*> swarm, int i) {
 
 
 /* Main control loop - Basically iterator */
-int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
+int draw_loop(GLFWwindow* window, vector<Agent*> swarm, string filename)
 {
     /* Logging */
     ofstream outputFile;
@@ -220,47 +220,52 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm)
 
 int main()
 {
-    GLFWwindow* window;
 
-    if (!glfwInit())
-        return -1;
+    for (int k = 1; k < 6; k++) {
+        iterations = 0;
 
-    window = glfwCreateWindow(1280, 960, "SwarmMemory", NULL, NULL);
-    if (!window)
-    {
+        GLFWwindow* window;
+
+        if (!glfwInit())
+            return -1;
+
+        window = glfwCreateWindow(1280, 960, "SwarmMemory", NULL, NULL);
+        if (!window)
+        {
+            glfwTerminate();
+            return -1;
+        }
+
+        glfwSetKeyCallback(window, key_callback);
+        glfwMakeContextCurrent(window);
+
+        /* Init swarm */
+        srand(static_cast <unsigned> (time(0)));
+
+        vector<Agent*> swarm;
+
+        for (int i = 0; i < num_swarm; i++) {
+            float x = -0.6 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.6 - -0.6)));
+            float y = -0.6 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.6 - -0.6)));
+            float f = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (6 - 0)));
+
+            swarm.push_back(new Agent(i, x, y, f));
+        }
+
+        //int i = 0;
+
+        //for (float x = -0.8; x < 0.81; x += 0.15) {
+        //    for (float y = -0.8; y < 0.81; y += 0.15) {
+        //        float f = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (6 - 0)));
+        //        i++;
+        //        swarm.push_back(new Agent(i, x, y, f));
+        //    }
+        //}
+
+
+        /* The main control loop */
+        draw_loop(window, swarm, prelimfilename + "_" + std::to_string(k) + ".csv");
+
         glfwTerminate();
-        return -1;
     }
-
-    glfwSetKeyCallback(window, key_callback);
-    glfwMakeContextCurrent(window);
-
-    /* Init swarm */
-    srand(static_cast <unsigned> (time(0)));
-
-    vector<Agent*> swarm;
-
-    for (int i = 0; i < num_swarm; i++) {
-        float x = -0.6 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.6 - -0.6)));
-        float y = -0.6 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.6 - -0.6)));
-        float f = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (6 - 0)));
-        
-        swarm.push_back(new Agent(i, x, y, f));
-    }
-
-    //int i = 0;
-
-    //for (float x = -0.8; x < 0.81; x += 0.15) {
-    //    for (float y = -0.8; y < 0.81; y += 0.15) {
-    //        float f = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (6 - 0)));
-    //        i++;
-    //        swarm.push_back(new Agent(i, x, y, f));
-    //    }
-    //}
-
-
-    /* The main control loop */
-    draw_loop(window, swarm);
-
-    glfwTerminate();
 }

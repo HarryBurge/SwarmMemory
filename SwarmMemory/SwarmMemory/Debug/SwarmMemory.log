@@ -4,7 +4,7 @@ C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\shared\minwindef.h(1
 C:\Users\Burge\Desktop\vcpkg\installed\x86-windows\include\GLFW\glfw3.h(123): message : see previous definition of 'APIENTRY'
 C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Util.cpp(28,20): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
 C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\Util.cpp(68,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(27,32): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(27,31): warning C4305: 'initializing': truncation from 'double' to 'float'
 C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(33,36): warning C4305: 'initializing': truncation from 'double' to 'float'
 C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(51,27): warning C4018: '<': signed/unsigned mismatch
 C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(53,88): warning C4305: 'argument': truncation from 'double' to 'float'
@@ -20,6 +20,6 @@ C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(142,2
 C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(168,27): warning C4018: '<': signed/unsigned mismatch
 C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(188,27): warning C4018: '<': signed/unsigned mismatch
 C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(208,31): warning C4018: '<': signed/unsigned mismatch
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(244,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(245,17): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(248,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\SwarmMemory\SwarmMemory.cpp(249,21): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   SwarmMemory.vcxproj -> C:\Users\Burge\Desktop\SwarmMemory\SwarmMemory\Debug\SwarmMemory.exe

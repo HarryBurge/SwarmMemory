@@ -31,7 +31,7 @@ const int data_at_start = 5;
 
 /* Chance to produce data, and amount to go up to*/
 const float data_going_random = 0.1;
-const int data_during = 3;
+const int data_during = 0;
 
 /* Test iterator */
 int iterations = 0;

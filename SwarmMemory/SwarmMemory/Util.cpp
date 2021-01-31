@@ -197,10 +197,10 @@ public:
         return Vec(a,b);
     }
 
-    Vec normalise() {
-        float mag = sqrt(pow(a,2) + pow(b,2));
-        a = a / mag;
-        b = b / mag;
+    Vec set_magnitude(float new_mag) {
+        float mag = sqrt(pow(a, 2) + pow(b, 2));
+        a = a * new_mag / mag;
+        b = b * new_mag / mag;
         return Vec(a, b);
     }
 

@@ -26,13 +26,11 @@ void Agent::step(vector<Agent*> swarm) {
 
 		for (int i = 0; i < swarm.size(); i++) {
 			if (swarm[i]->id != id && conn_area.point_in_circle(swarm[i]->body.center)) {
-				//float dist = body.center.distance(swarm[i]->body.center);
-				//float invdist = 0.26 - dist;
+				float dist = body.center.distance(swarm[i]->body.center);
+				float invdist = 0.24 - dist;
 
 				Vec originalvec = Vec(body.center.x - swarm[i]->body.center.x, body.center.y - swarm[i]->body.center.y);
-				// Needs to be normal and inverted thing
-
-				localagents.push_back(originalvec);
+				localagents.push_back(originalvec.set_magnitude(invdist));
 			}
 		}
 
@@ -42,34 +40,34 @@ void Agent::step(vector<Agent*> swarm) {
 			point_to_look = point_to_look.add(localagents[i]);
 		}
 
-		//cout << point_to_look.a << ',' << point_to_look.b << endl;
+		// Keep roughly towards the center
+		point_to_look = point_to_look.add(Vec(-body.center.x, -body.center.y).set_magnitude( (sqrt(8) - body.center.distance(Coord(0,0)))*0.03 ));
 
-		//if (isnan(facing)) {
-		//	facing = 0;
-		//}
-		//Vec current = Vec(cos(facing), sin(facing));
-
-		//float temp = current.a * point_to_look.b - current.b * point_to_look.a;
-
-		//if (temp < 0) {
-		//	move(0.002, 0.0002);
-		//}
-		//else {
-		//	move(-0.002, 0.0002);
-		//}
+		float to = facing;
 
 		if (isnan(point_to_look.angle_origin())) {
 
 		}
-		else if (point_to_look.a > 0){ // Can switch around and it will move away
-			facing = point_to_look.angle_origin() + pi;
+		else if (point_to_look.a < 0){ // Can switch around and it will move away
+			to = point_to_look.angle_origin() + pi;
 		}
-		else if (point_to_look.a < 0) {
-			facing = point_to_look.angle_origin();
+		else if (point_to_look.a > 0) {
+			to = point_to_look.angle_origin();
 		}
-		//cout << point_to_look.angle_origin() << endl;
+
+		//facing = to;
+
+		if (to-0.003 < facing < to+0.003) {
+			facing = to;
+		}
+		else if (facing < to) {
+			facing += 0.003;
+		}
+		else if (facing > to) {
+			facing -= 0.003;
+		}
+
 		move(0, 0.0002);
-		//cout << current.a * point_to_look.b - current.b * point_to_look.a << endl;
 	}
 	
 

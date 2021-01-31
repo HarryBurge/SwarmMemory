@@ -176,4 +176,39 @@ public:
     */
 };
 
+class Vec {
+public:
+    float a;
+    float b;
+
+    Vec() {
+        a = 0;
+        b = 0;
+    }
+
+    Vec(float ax, float bx) {
+        a = ax;
+        b = bx;
+    }
+
+    Vec add(Vec toadd) {
+        a += toadd.a;
+        b += toadd.b;
+        return Vec(a,b);
+    }
+
+    Vec normalise() {
+        float mag = sqrt(pow(a,2) + pow(b,2));
+        a = a / mag;
+        b = b / mag;
+        return Vec(a, b);
+    }
+
+    float angle_origin() {
+        return atan(b / a);
+    }
+
+
+};
+
 #endif

@@ -1,5 +1,6 @@
 #include "Agent.h"
 const double pi = 2 * acos(0.0);
+const double turnaround_range = 0.1;
 
 Agent::Agent() {
 }
@@ -17,7 +18,61 @@ Agent::Agent(int aid, float ax, float ay, float afacing) {
 
 void Agent::step(vector<Agent*> swarm) {
 
-	move(-0.001 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.004 - -0.001))), 0.0002);
+	/* Movement keeping away from other agents but need to stay near somewhere */
+	//move(-0.001 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.004 - -0.001))), 0.0002);
+
+	if (id != -1) {
+		vector<Vec> localagents;
+
+		for (int i = 0; i < swarm.size(); i++) {
+			if (swarm[i]->id != id && conn_area.point_in_circle(swarm[i]->body.center)) {
+				//float dist = body.center.distance(swarm[i]->body.center);
+				//float invdist = 0.26 - dist;
+
+				Vec originalvec = Vec(body.center.x - swarm[i]->body.center.x, body.center.y - swarm[i]->body.center.y);
+				// Needs to be normal and inverted thing
+
+				localagents.push_back(originalvec);
+			}
+		}
+
+		Vec point_to_look = Vec();
+
+		for (int i = 0; i < localagents.size(); i++) {
+			point_to_look = point_to_look.add(localagents[i]);
+		}
+
+		//cout << point_to_look.a << ',' << point_to_look.b << endl;
+
+		//if (isnan(facing)) {
+		//	facing = 0;
+		//}
+		//Vec current = Vec(cos(facing), sin(facing));
+
+		//float temp = current.a * point_to_look.b - current.b * point_to_look.a;
+
+		//if (temp < 0) {
+		//	move(0.002, 0.0002);
+		//}
+		//else {
+		//	move(-0.002, 0.0002);
+		//}
+
+		if (isnan(point_to_look.angle_origin())) {
+
+		}
+		else if (point_to_look.a > 0){ // Can switch around and it will move away
+			facing = point_to_look.angle_origin() + pi;
+		}
+		else if (point_to_look.a < 0) {
+			facing = point_to_look.angle_origin();
+		}
+		//cout << point_to_look.angle_origin() << endl;
+		move(0, 0.0002);
+		//cout << current.a * point_to_look.b - current.b * point_to_look.a << endl;
+	}
+	
+
 
 	/* Private memory replicate if no duplicates around */
 	for (int i = 0; i < mem->pri_mem.size(); i++) {
@@ -93,7 +148,7 @@ void Agent::step(vector<Agent*> swarm) {
 		float heuristic_rep = b1 * (1-dupes_ratio) + b2 * ((2.82843 - to_point) / 2.82843) + b3 * average_public_spare;
 		
 
-		if (heuristic_rep > 0.8) {
+		if (heuristic_rep > 0.85) {
 			message(swarm, Packet(mem->pub_mem[iterator], 2, id, -1));
 		}
 
@@ -102,7 +157,7 @@ void Agent::step(vector<Agent*> swarm) {
 
 		float heuristic_sui = p1 * dupes_ratio + p2 * (to_point / 2.82843);
 
-		if (heuristic_sui > 0.37) {
+		if (heuristic_sui > 0.4) {
 			mem->remove_pub(iterator);
 		}
 

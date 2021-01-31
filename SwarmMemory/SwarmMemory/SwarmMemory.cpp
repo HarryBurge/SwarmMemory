@@ -24,14 +24,14 @@ const bool draw_conn_circles = false;
 const bool draw_conn_connections = true;
 
 /* Chance to lose agent */
-const float lose_agent = 0.001;
+const float lose_agent = -0.001;
 
 /* Amount of data to start with in begining*/
-const int data_at_start = 20;
+const int data_at_start = 5;
 
 /* Chance to produce data, and amount to go up to*/
 const float data_going_random = 0.1;
-const int data_during = 0;
+const int data_during = 3;
 
 /* Test iterator */
 int iterations = 0;

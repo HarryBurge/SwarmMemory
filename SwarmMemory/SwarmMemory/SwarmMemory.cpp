@@ -17,17 +17,18 @@ using namespace std;
 
 const string prelimfilename = "SimpleSuicideReplication";
 
-const int num_swarm = 50;
+const int num_swarm = 30;
 
 /* Visual stuff */
 const bool draw_conn_circles = false;
 const bool draw_conn_connections = true;
 
 /* Chance to lose agent */
-const float lose_agent = -0.001;
+const float lose_agent = -0.003;
+const float corrilated_failure = -0.0003;
 
 /* Amount of data to start with in begining*/
-const int data_at_start = 5;
+const int data_at_start = 9;
 
 /* Chance to produce data, and amount to go up to*/
 const float data_going_random = 0.1;
@@ -79,11 +80,11 @@ void draw_agent_stuffs(vector<Agent*> swarm, int i) {
     float g = 0.2;
     float b = 0.2;
 
-    if (swarm[i]->mem->pub_has_data_id(0)) {
+    if (swarm[i]->mem->pub_has_data_id(0) || swarm[i]->mem->pri_has_data_id(0)) {
         g = 0.8;
     }
 
-    if (swarm[i]->mem->pub_has_data_id(1)) {
+    if (swarm[i]->mem->pub_has_data_id(1) || swarm[i]->mem->pri_has_data_id(1)) {
         b = 0.8;
     }
 
@@ -96,7 +97,7 @@ void draw_agent_stuffs(vector<Agent*> swarm, int i) {
 
 
 /* Main control loop - Basically iterator */
-int draw_loop(GLFWwindow* window, vector<Agent*> swarm, string filename)
+int draw_loop(GLFWwindow* window, vector<Agent*> swarm, string filename, vector<Coord> data_areas)
 {
     /* Logging */
     ofstream outputFile;
@@ -105,25 +106,22 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm, string filename)
     outputFile << "iteration, total_datas, (x,y,c1,...,cn)*";
     outputFile << "\n";
 
-    vector<Coord> data_areas;
+    for (int i = 0; i < data_areas.size(); i++) {
 
-    /* random data at the start */
-    for (int i = 0; i < data_at_start; i++) {
-        bool yn = true;
+        float mindist = 100;
+        int min_arg = 0;
 
-        while (yn) {
-            int ind_a = rand() % swarm.size();
-
-            if (swarm[ind_a]->mem->space_in_pri()) {
-
-                swarm[ind_a]->mem->push_pri_mem(Data(i, ind_a, 0, Coord(swarm[ind_a]->body.center.x, swarm[ind_a]->body.center.y)));
-
-                // Visuals
-                data_areas.push_back(Coord(swarm[ind_a]->body.center.x, swarm[ind_a]->body.center.y));
-
-                yn = false;
+        for (int j = 0; j < swarm.size(); j++) {
+            if (mindist > data_areas[i].distance(swarm[j]->body.center)) {
+                mindist = data_areas[i].distance(swarm[j]->body.center);
+                min_arg = j;
             }
         }
+
+        cout << min_arg << endl;
+
+        // Push data to swarm member
+        swarm[min_arg]->mem->push_pri_mem(Data(i, min_arg, 0, data_areas[i]));
     }
 
 
@@ -160,6 +158,19 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm, string filename)
             swarm.pop_back();
         }
 
+
+        /* Corrilated failure */
+        rando = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 - 0)));
+
+        vector<Agent*> swarmtemp;
+        if (rando < corrilated_failure && iterations > 100) {
+            for (int i = 0; i < swarm.size(); i++) {
+                if (swarm[i]->body.center.distance(data_areas[rand() % data_areas.size()]) > 0.25) {
+                    swarmtemp.push_back(swarm[i]);
+                }
+            }
+            swarm = swarmtemp;
+        }
 
 
         /* debug */
@@ -220,6 +231,20 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm, string filename)
 
 int main()
 {
+    vector<Coord> data_areas;
+
+    /* random data at the start */
+    //for (int i = 0; i < data_at_start; i++) {
+    //    // Visuals
+    //    data_areas.push_back(Coord(-0.7 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.6 - -0.6))), -0.6 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.6 - -0.6)))));
+    //}
+
+    float rang[] = { -0.4, 0, 0.4 };
+    for (int x = 0; x < 3; x++) {
+        for (int y = 0; y < 3; y++) {
+            data_areas.push_back(Coord(rang[x], rang[y]));
+        }
+    }
 
     for (int k = 1; k < 6; k++) {
         iterations = 0;
@@ -245,8 +270,8 @@ int main()
         vector<Agent*> swarm;
 
         for (int i = 0; i < num_swarm; i++) {
-            float x = -0.6 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.6 - -0.6)));
-            float y = -0.6 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.6 - -0.6)));
+            float x = -0.7 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.7 - -0.7)));
+            float y = -0.7 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.7 - -0.7)));
             float f = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (6 - 0)));
 
             swarm.push_back(new Agent(i, x, y, f));
@@ -264,7 +289,7 @@ int main()
 
 
         /* The main control loop */
-        draw_loop(window, swarm, prelimfilename + "_" + std::to_string(k) + ".csv");
+        draw_loop(window, swarm, prelimfilename + "_" + std::to_string(k) + ".csv", data_areas);
 
         glfwTerminate();
     }

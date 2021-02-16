@@ -1,6 +1,5 @@
 #include "Agent.h"
 const double pi = 2 * acos(0.0);
-const double turnaround_range = 0.1;
 
 Agent::Agent() {
 }
@@ -55,9 +54,9 @@ void Agent::step(vector<Agent*> swarm) {
 			to = point_to_look.angle_origin();
 		}
 
-		//facing = to;
+		facing = to;
 
-		if (to-0.003 < facing < to+0.003) {
+		/*if (to-0.003 < facing < to+0.003) {
 			facing = to;
 		}
 		else if (facing < to) {
@@ -65,7 +64,7 @@ void Agent::step(vector<Agent*> swarm) {
 		}
 		else if (facing > to) {
 			facing -= 0.003;
-		}
+		}*/
 
 		move(0, 0.0002);
 	}
@@ -146,7 +145,7 @@ void Agent::step(vector<Agent*> swarm) {
 		float heuristic_rep = b1 * (1-dupes_ratio) + b2 * ((2.82843 - to_point) / 2.82843) + b3 * average_public_spare;
 		
 
-		if (heuristic_rep > 0.85) {
+		if (heuristic_rep > 0.8) {
 			message(swarm, Packet(mem->pub_mem[iterator], 2, id, -1));
 		}
 
@@ -155,7 +154,7 @@ void Agent::step(vector<Agent*> swarm) {
 
 		float heuristic_sui = p1 * dupes_ratio + p2 * (to_point / 2.82843);
 
-		if (heuristic_sui > 0.4) {
+		if (heuristic_sui > 0.325) {
 			mem->remove_pub(iterator);
 		}
 

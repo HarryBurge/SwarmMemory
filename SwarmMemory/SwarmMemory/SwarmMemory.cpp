@@ -17,18 +17,18 @@ using namespace std;
 
 const string prelimfilename = "SimpleSuicideReplication";
 
-const int num_swarm = 30;
+const int num_swarm = 50;
 
 /* Visual stuff */
 const bool draw_conn_circles = false;
 const bool draw_conn_connections = true;
 
 /* Chance to lose agent */
-const float lose_agent = -0.003;
+const float lose_agent = -0.004;
 const float corrilated_failure = -0.0003;
 
 /* Amount of data to start with in begining*/
-const int data_at_start = 9;
+const int data_at_start = 1;
 
 /* Chance to produce data, and amount to go up to*/
 const float data_going_random = 0.1;
@@ -159,18 +159,29 @@ int draw_loop(GLFWwindow* window, vector<Agent*> swarm, string filename, vector<
         }
 
 
-        /* Corrilated failure */
-        rando = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 - 0)));
+        /* random Corrilated failure */
+        //rando = 0 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (1 - 0)));
 
-        vector<Agent*> swarmtemp;
-        if (rando < corrilated_failure && iterations > 100) {
-            for (int i = 0; i < swarm.size(); i++) {
-                if (swarm[i]->body.center.distance(data_areas[rand() % data_areas.size()]) > 0.25) {
-                    swarmtemp.push_back(swarm[i]);
-                }
-            }
-            swarm = swarmtemp;
-        }
+        //vector<Agent*> swarmtemp;
+        //if (rando < corrilated_failure && iterations > 100) {
+        //    for (int i = 0; i < swarm.size(); i++) {
+        //        if (swarm[i]->body.center.distance(data_areas[rand() % data_areas.size()]) > 0.25) {
+        //            swarmtemp.push_back(swarm[i]);
+        //        }
+        //    }
+        //    swarm = swarmtemp;
+        //}
+
+        /* Concurrent failure at 3000 */
+        //vector<Agent*> swarmtemp;
+        //if (iterations == 3000) {
+        //    for (int i = 0; i < swarm.size(); i++) {
+        //        if (swarm[i]->body.center.distance(data_areas[4]) > 0.25) {
+        //            swarmtemp.push_back(swarm[i]);
+        //        }
+        //    }
+        //    swarm = swarmtemp;
+        //}
 
 
         /* debug */
@@ -233,20 +244,20 @@ int main()
 {
     vector<Coord> data_areas;
 
-    /* random data at the start */
-    //for (int i = 0; i < data_at_start; i++) {
-    //    // Visuals
-    //    data_areas.push_back(Coord(-0.7 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.6 - -0.6))), -0.6 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.6 - -0.6)))));
+    /* 9 Data */
+    //float rang[] = { -0.4, 0, 0.4 };
+    //for (int x = 0; x < 3; x++) {
+    //    for (int y = 0; y < 3; y++) {
+    //        data_areas.push_back(Coord(rang[x], rang[y]));
+    //    }
     //}
 
-    float rang[] = { -0.4, 0, 0.4 };
-    for (int x = 0; x < 3; x++) {
-        for (int y = 0; y < 3; y++) {
-            data_areas.push_back(Coord(rang[x], rang[y]));
-        }
-    }
+    /* concurrent tests */
+    data_areas.push_back(Coord(0, 0));
 
-    for (int k = 1; k < 6; k++) {
+
+
+    for (int k = 1; k < 3; k++) {
         iterations = 0;
 
         GLFWwindow* window;

@@ -7,6 +7,7 @@
 #include "AgentMemory.h"
 #include "Packet.h"
 #include "Util.cpp"
+#include <math.h>
 using namespace std;
 
 
@@ -14,6 +15,10 @@ class Agent
 {
 public:
 	float id;
+	int lastactions;
+	int lastactionr;
+
+	float stability;
 
 	Circle body;
 	Circle conn_area;

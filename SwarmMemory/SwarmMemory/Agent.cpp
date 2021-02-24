@@ -1,5 +1,6 @@
 #include "Agent.h"
 const double pi = 2 * acos(0.0);
+const int facter = 40;
 
 Agent::Agent() {
 }
@@ -8,6 +9,9 @@ Agent::Agent(int aid, float ax, float ay, float afacing) {
 	id = aid;
 	facing = afacing;
 	iterator = 0;
+	lastactions = 0;
+
+	stability = 0;
 
 	body = Circle(ax, ay, 0.01);
 	conn_area = Circle(ax, ay, 0.25);
@@ -20,54 +24,52 @@ void Agent::step(vector<Agent*> swarm) {
 	/* Movement keeping away from other agents but need to stay near somewhere */
 	//move(-0.001 + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (0.004 - -0.001))), 0.0002);
 
-	if (id != -1) {
-		vector<Vec> localagents;
+	vector<Vec> localagents;
 
-		for (int i = 0; i < swarm.size(); i++) {
-			if (swarm[i]->id != id && conn_area.point_in_circle(swarm[i]->body.center)) {
-				float dist = body.center.distance(swarm[i]->body.center);
-				float invdist = 0.24 - dist;
+	for (int i = 0; i < swarm.size(); i++) {
+		if (swarm[i]->id != id && conn_area.point_in_circle(swarm[i]->body.center)) {
+			float dist = body.center.distance(swarm[i]->body.center);
+			float invdist = 0.24 - dist;
 
-				Vec originalvec = Vec(body.center.x - swarm[i]->body.center.x, body.center.y - swarm[i]->body.center.y);
-				localagents.push_back(originalvec.set_magnitude(invdist));
-			}
+			Vec originalvec = Vec(body.center.x - swarm[i]->body.center.x, body.center.y - swarm[i]->body.center.y);
+			localagents.push_back(originalvec.set_magnitude(invdist));
 		}
-
-		Vec point_to_look = Vec();
-
-		for (int i = 0; i < localagents.size(); i++) {
-			point_to_look = point_to_look.add(localagents[i]);
-		}
-
-		// Keep roughly towards the center
-		point_to_look = point_to_look.add(Vec(-body.center.x, -body.center.y).set_magnitude( (sqrt(8) - body.center.distance(Coord(0,0)))*0.03 ));
-
-		float to = facing;
-
-		if (isnan(point_to_look.angle_origin())) {
-
-		}
-		else if (point_to_look.a < 0){ // Can switch around and it will move away
-			to = point_to_look.angle_origin() + pi;
-		}
-		else if (point_to_look.a > 0) {
-			to = point_to_look.angle_origin();
-		}
-
-		facing = to;
-
-		/*if (to-0.003 < facing < to+0.003) {
-			facing = to;
-		}
-		else if (facing < to) {
-			facing += 0.003;
-		}
-		else if (facing > to) {
-			facing -= 0.003;
-		}*/
-
-		move(0, 0.0002);
 	}
+
+	Vec point_to_look = Vec();
+
+	for (int i = 0; i < localagents.size(); i++) {
+		point_to_look = point_to_look.add(localagents[i]);
+	}
+
+	// keep roughly towards the center
+	point_to_look = point_to_look.add(Vec(-body.center.x, -body.center.y).set_magnitude( (sqrt(8) - body.center.distance(Coord(0,0)))*0.03 ));
+
+	float to = facing;
+
+	if (isnan(point_to_look.angle_origin())) {
+
+	}
+	else if (point_to_look.a < 0){ // can switch around and it will move away
+		to = point_to_look.angle_origin() + pi;
+	}
+	else if (point_to_look.a > 0) {
+		to = point_to_look.angle_origin();
+	}
+
+	facing = to;
+
+	/*if (to-0.003 < facing < to+0.003) {
+		facing = to;
+	}
+	else if (facing < to) {
+		facing += 0.003;
+	}
+	else if (facing > to) {
+		facing -= 0.003;
+	}*/
+
+	move(0, 0.0002);
 	
 
 
@@ -138,27 +140,41 @@ void Agent::step(vector<Agent*> swarm) {
 		average_public_spare = average_public_spare / pub_max_size;
 
 
+		float alphar = 20;
+		float betar = 2;
+		float dynweightr = 0.6;
+
+
 		float b1 = 0.45;
 		float b2 = 0.45;
 		float b3 = 0.1;
 
-		float heuristic_rep = b1 * (1-dupes_ratio) + b2 * ((2.82843 - to_point) / 2.82843) + b3 * average_public_spare;
+		float heuristic_rep = b1 * (1 - dupes_ratio) + b2 * ((2.82843 - to_point) / 2.82843) + b3 * average_public_spare -dynweightr * ((1 / (1 + exp(-((float)stability - alphar) / betar))));
 		
-
-		if (heuristic_rep > 0.8) {
+		if (heuristic_rep > 0.9) {
 			message(swarm, Packet(mem->pub_mem[iterator], 2, id, -1));
 		}
+
+		float alphas = 150;
+		float betas = 2;
+		float dynweights = 0.6;
 
 		float p1 = 0.3;
 		float p2 = 0.7;
 
-		float heuristic_sui = p1 * dupes_ratio + p2 * (to_point / 2.82843);
+		float heuristic_sui = p1 * dupes_ratio + p2 * (to_point / 2.82843) -dynweights * (-(1 / (1 + exp(-((float)lastactions - alphas) / betas))) + 1);
 
 		if (heuristic_sui > 0.325) {
 			mem->remove_pub(iterator);
+			lastactions = 0;
 		}
 
+		lastactions++;
 
+		stability--;
+		if (stability < 0) {
+			stability = 0;
+		}
 	}
 
 
@@ -195,7 +211,8 @@ Packet Agent::recieved(Packet packet) {
 			return Packet(1, id, packet.senderid);
 		}
 
-		if (packet.type == 2 && mem->space_in_pub() && packet.data.creator_id != id && !mem->pub_has_data_id(packet.data.id) && !mem->pri_has_data_id(packet.data.id)) {
+		if (packet.type == 2 && packet.data.creator_id != id && mem->space_in_pub() && !mem->pub_has_data_id(packet.data.id) && !mem->pri_has_data_id(packet.data.id)) {
+			stability += facter;
 			mem->push_pub_mem(packet.data);
 			return Packet(1, id, packet.senderid);
 		}

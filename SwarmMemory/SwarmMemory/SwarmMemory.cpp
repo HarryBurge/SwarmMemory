@@ -24,7 +24,7 @@ const bool draw_conn_circles = false;
 const bool draw_conn_connections = true;
 
 /* Chance to lose agent */
-const float lose_agent = -0.004;
+const float lose_agent = -0.003;
 const float corrilated_failure = -0.0003;
 
 /* Amount of data to start with in begining*/
@@ -257,7 +257,7 @@ int main()
 
 
 
-    for (int k = 1; k < 3; k++) {
+    for (int k = 1; k < 6; k++) {
         iterations = 0;
 
         GLFWwindow* window;

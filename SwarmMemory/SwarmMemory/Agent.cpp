@@ -1,6 +1,6 @@
 #include "Agent.h"
 const double pi = 2 * acos(0.0);
-const int facter = 40;
+const int facter = 50;
 
 Agent::Agent() {
 }
@@ -126,7 +126,7 @@ void Agent::step(vector<Agent*> swarm) {
 
 		for (int j = 0; j < collect2.size(); j++) {
 
-			if (collect2[j].type == 1) {
+			if (collect2[j].type == 1 && collect2[j].additional >= 0) {
 				average_public_spare += (float) collect2[j].additional;
 				total_num++;
 			}
@@ -140,7 +140,31 @@ void Agent::step(vector<Agent*> swarm) {
 		average_public_spare = average_public_spare / pub_max_size;
 
 
-		float alphar = 20;
+		/* Create finder for min in collect2 and look for off loading in migration, possibly a random chance, make based off tability and diffrence between values */
+		int argmax = -1;
+		int max = -1000000000;
+
+		for (int j = 0; j < collect2.size(); j++) {
+
+			if (collect2[j].additional > max) {
+				max = collect2[j].additional;
+				argmax = j;
+			}
+
+		}
+
+		bool migrationed = false;
+
+		if (pub_max_size - mem->pub_mem.size() < max-2 && collect2.size() != 0) {
+			vector<Packet> collect3 = message(swarm, Packet(mem->pub_mem[iterator], 2, id, collect2[argmax].senderid));
+			mem->remove_pub(iterator);
+			lastactions = 0;
+			migrationed = true;
+		}
+
+
+
+		float alphar = 15;
 		float betar = 2;
 		float dynweightr = 0.6;
 
@@ -149,14 +173,14 @@ void Agent::step(vector<Agent*> swarm) {
 		float b2 = 0.45;
 		float b3 = 0.1;
 
-		float heuristic_rep = b1 * (1 - dupes_ratio) + b2 * ((2.82843 - to_point) / 2.82843) + b3 * average_public_spare -dynweightr * ((1 / (1 + exp(-((float)stability - alphar) / betar))));
+		float heuristic_rep = b1 * (1 - dupes_ratio) + b2 * ((2.82843 - to_point) / 2.82843) + b3 * average_public_spare - dynweightr * ((1 / (1 + exp(-((float)stability - alphar) / betar))));
 		
-		if (heuristic_rep > 0.9) {
+		if (heuristic_rep > 0.9 && !migrationed) {
 			message(swarm, Packet(mem->pub_mem[iterator], 2, id, -1));
 		}
 
 		float alphas = 150;
-		float betas = 2;
+		float betas = 3;
 		float dynweights = 0.6;
 
 		float p1 = 0.3;
@@ -164,7 +188,7 @@ void Agent::step(vector<Agent*> swarm) {
 
 		float heuristic_sui = p1 * dupes_ratio + p2 * (to_point / 2.82843) -dynweights * (-(1 / (1 + exp(-((float)lastactions - alphas) / betas))) + 1);
 
-		if (heuristic_sui > 0.325) {
+		if (heuristic_sui > 0.3 && !migrationed) {
 			mem->remove_pub(iterator);
 			lastactions = 0;
 		}

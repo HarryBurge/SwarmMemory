@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from packet import Packet
 import time
 
@@ -9,7 +10,6 @@ class Agent(object):
     def __init__(self, sim, id, x, y, facing, model=None, con_radius=0.25, pub_mem_lim=10, pri_mem_lim=10):
 
         # TODO: AI intergration
-        # TODO: Mutex if needed
         self.sim = sim
         self.id = id
         self.x = x
@@ -22,11 +22,16 @@ class Agent(object):
         self.pri_mem = []
 
         self.mem_pc = 0
-        self.lastaction_count = 0
-        self.stability = 0
 
         self.pub_mem_lim = pub_mem_lim
         self.pri_mem_lim = pri_mem_lim
+
+        self.internal_log = pd.DataFrame()
+        self.ai = model
+
+        # Logging info
+        self.track2 = [0,0]
+        self.since_last = [0,0,0]
 
 
     def move(self, dangle, speed):
@@ -49,9 +54,12 @@ class Agent(object):
                 return True
 
             if packet.type == 2 and self.space_in_mem('pub') and (not self.mem_has_id(packet.data.id, 'pri')) and (not self.mem_has_id(packet.data.id, 'pub')):
-                self.stability += factor
                 self.pushto_mem(packet.data, 'pub')
+                self.track2[0] += 1
+                self.track2[1] += 1
                 return True
+            elif packet.type == 2:
+                self.track2[1] += 1
 
             if packet.type == 3 and self.mem_has_id(packet.data.id, 'pub'):
                 return True
@@ -174,3 +182,67 @@ class Agent(object):
         self.facing = angle
 
         self.move(0, 0.0002)
+
+
+        # Aproved 2 versus amount
+        apVSam=0
+        if self.track2[1] != 0:
+            apVSam = self.track2[0]/self.track2[1]
+
+        # Space left in public memory
+        splt = self.pub_mem_lim - len(self.pub_mem)
+
+        # Duplication ratio
+        # Amount of agents around
+        # Average space in other agents mems
+
+        total_agents_around = 0
+        duplicates = 0
+        total_space_in_agent_mem = 0
+
+        for i in self.sim.agents:
+
+            if i.id != self.id and np.sqrt(pow(self.x - i.x, 2) + pow(self.y - i.y, 2)) <= self.con_radius:
+
+                total_space_in_agent_mem += i.pub_mem_lim - len(i.pub_mem)
+                total_agents_around += 1
+                if len(self.pub_mem) > 0 and i.mem_has_id(self.pub_mem[self.mem_pc], 'pub'):
+                    duplicates += 1
+
+        dupes_ratio = 0
+        avgspace = self.pub_mem_lim - len(self.pub_mem)
+
+        if total_agents_around != 0:
+            dupes_ratio = duplicates/total_agents_around
+            avgsapce = total_space_in_agent_mem/total_agents_around
+
+        # Distance to data point
+        dist_to_point = 0
+        if len(self.pub_mem) > 0:
+            dist_to_point = np.sqrt(pow(self.x - self.pub_mem[self.mem_pc].x, 2) + pow(self.y - self.pub_mem[self.mem_pc].y, 2))
+
+        # Since last suicide
+        # Since last migration
+        # Since last replication
+
+
+        self.internal_log = pd.concat([self.internal_log, pd.DataFrame([[apVSam, splt, total_agents_around, dupes_ratio, avgspace, dist_to_point]+self.since_last])], axis=0)
+
+        if self.internal_log.shape[0] > 19:
+            self.internal_log = self.internal_log.iloc[1:]
+
+
+
+
+        if self.ai != None:
+            pass
+            # TODO: Make AI use logs to do actions
+
+
+        self.track2 = [0,0]
+        self.mem_pc += 1
+        if self.mem_pc >= len(self.pub_mem):
+            self.mem_pc = 0
+        for i in range(len(self.since_last)):
+            self.since_last[i] += 1
+

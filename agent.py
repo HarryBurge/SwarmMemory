@@ -2,8 +2,10 @@ import numpy as np
 import pandas as pd
 from packet import Packet
 import time
+from pathos.multiprocessing import freeze_support
 
 factor = 50
+freeze_support()
 
 class Agent(object):
 
@@ -228,14 +230,27 @@ class Agent(object):
 
         self.internal_log = pd.concat([self.internal_log, pd.DataFrame([[apVSam, splt, total_agents_around, dupes_ratio, avgspace, dist_to_point]+self.since_last])], axis=0)
 
-        if self.internal_log.shape[0] > 19:
+        if self.internal_log.shape[0] > 20:
             self.internal_log = self.internal_log.iloc[1:]
 
 
 
 
-        if self.ai != None:
-            pass
+        if self.ai != None and self.internal_log.shape[0] == 20:
+            output = self.ai(np.array(self.internal_log).reshape(-1, 1, 9))
+            
+            arg = np.argmax(output)
+
+            if arg == 0: # Do Nothing
+                pass
+            elif arg == 1: # Replicate
+                if len(self.pub_mem) != 0:
+                    self.message(Packet(2, self.id, -1, data=self.pub_mem[self.mem_pc]))
+            elif arg == 2: # Suicide
+                if len(self.pub_mem) != 0:
+                    self.remove_data_mem(self.pub_mem[self.mem_pc].id, 'pub')
+            else: # Migrate
+                pass
             # TODO: Make AI use logs to do actions
 
 
@@ -243,6 +258,9 @@ class Agent(object):
         self.mem_pc += 1
         if self.mem_pc >= len(self.pub_mem):
             self.mem_pc = 0
+
         for i in range(len(self.since_last)):
             self.since_last[i] += 1
 
+if __name__ == '__main__':
+    print("Can't be run")

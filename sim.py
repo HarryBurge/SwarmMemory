@@ -19,7 +19,7 @@ from keras_pickle_wrapper import KerasPickleWrapper
 
 class Sim:
 
-    def __init__(self, agents=50):
+    def __init__(self, model = None, agents=50):
 
         self.agents = []
         self.data_points = []
@@ -34,11 +34,15 @@ class Sim:
             for j in [-0.4, 0, 0.4]:
                 self.data_points.append((i,j))
 
+        self.model = model
 
-    def run(self, model, runtime=40, non_cor_chance = -0.003, cor_when = None, verbose = True):
+
+    def run(self, model=None, runtime=40, non_cor_chance = -0.003, cor_when = None, verbose = True):
         
+        # for i in self.agents:
+        #     i.ai = model
         for i in self.agents:
-            i.ai = model
+            i.ai = self.model
 
         for iteration in range(runtime):
 
@@ -74,62 +78,17 @@ if __name__ == '__main__':
     model.add(Dense(4))
 
 
-    models = []
-    sims = []
+    # # models = []
+    # sims = []
 
-    for i in range(1):
-        models.append(KerasPickleWrapper(tensorflow.keras.models.clone_model(model)))
-        sims.append(Sim())
+    # for i in range(4):
+    #     # models.append(KerasPickleWrapper(tensorflow.keras.models.clone_model(model)))
+    #     temp = KerasPickleWrapper(tensorflow.keras.models.clone_model(model))
+    #     sims.append(Sim(temp))
     
-    p = Pool()
-    p.map(Sim.run, sims, models)
+    # p = Pool()
+    # p.map(Sim.run, sims)#,models)
 
 
     # tom = Sim(model)
     # tom.run(verbose=True)
-
-    # keras_ga= pygad.kerasga.KerasGA(model=model,
-    #                                  num_solutions=50)
-
-    # def fitness_func(solution, sol_index):
-    #     model_weights_matrix = pygad.kerasga.model_weights_as_matrix(model=model,
-    #                                                              weights_vector=solution)
-    #     model.set_weights(weights=model_weights_matrix)
-
-    #     # Run Model
-    #     Sim(model).run()
-
-    #     return 1
-
-    # def callback_generation(ga_instance):
-    #     print("Generation = {generation}".format(generation=ga_instance.generations_completed))
-    #     print("Fitness    = {fitness}".format(fitness=ga_instance.best_solution()[1]))
-
-    #     solution, solution_fitness, solution_idx = ga_instance.best_solution()
-    #     best_solution_weights = pygad.kerasga.model_weights_as_matrix(model=model,
-    #                                                             weights_vector=solution)
-
-    # def stop(ga_instance, fitnesses):
-    #     # After run fetch best fitness
-    #     ga_instance.plot_result(title="PyGAD & Keras - Iteration vs. Fitness", linewidth=4)
-
-    #     solution, solution_fitness, solution_idx = ga_instance.best_solution()
-    #     print("Fitness value of the best solution = {solution_fitness}".format(solution_fitness=solution_fitness))
-
-    # num_generations = 10
-    # num_parents_mating = 5
-    # initial_population = keras_ga.population_weights
-
-    # ga_instance = pygad.GA(num_generations=num_generations, 
-    #                     num_parents_mating=num_parents_mating, 
-    #                     initial_population=initial_population,
-    #                     fitness_func=fitness_func,
-    #                     on_generation=callback_generation,
-    #                     on_stop=stop)
-
-    # try:
-    #     ga_instance.run()
-    # except KeyboardInterrupt:
-    #     ga_instance.plot_result(title="PyGAD & Keras - Iteration vs. Fitness", linewidth=4)
-    #     solution, solution_fitness, solution_idx = ga_instance.best_solution()
-    #     print("Fitness value of the best solution = {solution_fitness}".format(solution_fitness=solution_fitness))

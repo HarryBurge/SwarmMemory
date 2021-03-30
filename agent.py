@@ -154,6 +154,18 @@ class Agent(object):
 
 
     def step(self):
+        for i in self.pri_mem:
+            collect = self.message(Packet(3, self.id, -1, data=i))
+
+            all_false = True
+
+            for j in collect:
+                if j: all_false = False
+
+            if all_false:
+                self.message(Packet(2, self.id, -1, data=i))
+
+
         # self.move(np.random.uniform(-0.001, 0.004), 0.0002)
 
         vecs = np.zeros((len(self.sim.agents), 2))
@@ -226,8 +238,11 @@ class Agent(object):
         to_ai = np.array([[apVSam, splt, total_agents_around, dupes_ratio, avgspace, dist_to_point, self.since_last[0], self.since_last[1], self.since_last[2]]])
 
 
-        output = self.ai()(to_ai)
-        argmax = np.argmax(output)
+        # output = self.ai()(to_ai)
+        # argmax = np.argmax(output)
+
+        argmax = np.random.randint(0,4)
+
         if argmax == 0: #Do nothing
             pass
         elif argmax == 1 and len(self.pub_mem) != 0: #Replicate
@@ -247,6 +262,9 @@ class Agent(object):
 
         self.track2 = self.track2*0.8
         self.since_last += 1
+
+        # if self.id == 0:
+        # print(self.pub_mem, self.pri_mem)
 
 
 if __name__ == '__main__':

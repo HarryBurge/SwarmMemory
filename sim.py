@@ -40,7 +40,7 @@ class Sim:
         self.model = model
 
 
-    def run(self, model=None, runtime=40, non_cor_chance = -0.003, cor_when = None, verbose = True):
+    def run(self, model=None, runtime=400, non_cor_chance = -0.003, cor_when = None, verbose = True):
         
         # for i in self.agents:
         #     i.ai = model
@@ -108,6 +108,10 @@ class Sim:
         pass
 
 
+def plot_sim(log):
+    pass
+
+
 
 if __name__ == '__main__':
     freeze_support()
@@ -132,3 +136,7 @@ if __name__ == '__main__':
 
     tom = Sim(KerasPickleWrapper(model))
     tom.run(verbose=True)
+
+
+    # plt.plot([tom.log[i][1] for i in range(400)])
+    # plt.show()

@@ -20,6 +20,7 @@ import agent
 import sys
 from scipy.ndimage.filters import gaussian_filter1d
 from textwrap import wrap
+import copy
 os.environ["CUDA_VISIBLE_DEVICES"]="-1" 
 # np.set_printoptions(threshold=sys.maxsize)
 
@@ -42,7 +43,7 @@ class Sim:
         self.model = model
 
 
-    def run(self, model=None, runtime=10000, non_cor_chance = -0.003, cor_when = None, verbose = True, save_log = False):
+    def run(self, model=None, runtime=500, non_cor_chance = 0.003, cor_when = None, verbose = False):
         
         # for i in self.agents:
         #     i.ai = model
@@ -103,13 +104,25 @@ class Sim:
         return self
 
 
-
     def fitness(self):
         
         # Take into account nagents compared to dupes
         # Make sum of stability the smallest
         # As long as dists roughly in the correct range, mean under certain range but max past certain threshold
-        pass
+        se_of_dupes = 0
+        sum_of_stab = 0
+        distmax_min = 0
+        num_of_it = 0
+
+        for iteration in np.arange(len(self.log)):
+            if type(self.log[iteration]) != type(None):
+                num_of_it += 1
+                se_of_dupes = se_of_dupes - np.power(np.mean(self.log[iteration][1]) - self.log[iteration][0], 2)
+                sum_of_stab = sum_of_stab - np.mean(self.log[iteration][4])
+                distmax_min = distmax_min + np.mean(np.power(np.max(self.log[iteration][2]) - np.min(self.log[iteration][2]), 2))
+
+        return (se_of_dupes + sum_of_stab*100 + distmax_min*100)/num_of_it
+
 
 
 def plot_sims(logs):
@@ -126,7 +139,11 @@ def plot_sims(logs):
             if type(run[i]) != type(None):
                 nagents[ind, i] = nagents[ind, i] + run[i][0]
                 dupes[ind, i] = dupes[ind, i] + run[i][1]
-                dists[ind, i] = dists[ind, i] + run[i][2]
+
+                temp = np.zeros((9,50))
+                temp[:run[i][2].shape[0],:run[i][2].shape[1]] = run[i][2]
+                dists[ind, i] = dists[ind, i] + temp
+
                 ratios = ratios + run[i][3]
                 stab[ind, i] = stab[ind, i] + run[i][4]
 
@@ -247,31 +264,121 @@ def plot_sims(logs):
     plt.show()
 
 
-
-if __name__ == '__main__':
-    freeze_support()
-
+def ga(pop_size, parrellel_size, iterations, bots_to_mate):
     model = Sequential()
     model.add(Input(shape=(9)))
     model.add(Dense(9))
     model.add(Dense(4))
 
 
-    # models = []
-    sims = []
+    # Inital population
+    population = []
 
-    for i in range(6):
-        # models.append(KerasPickleWrapper(tensorflow.keras.models.clone_model(model)))
-        temp = KerasPickleWrapper(tensorflow.keras.models.clone_model(model))
-        sims.append(Sim(temp))
+    for i in range(pop_size):
+        population.append(Sim(KerasPickleWrapper(tensorflow.keras.models.clone_model(model))))
+
+
+    for iters in range(iterations):
+        # Fitness of models
+        p = Pool(parrellel_size)
+        out = p.map(Sim.run, population)
+
+        pop_fitness = [out[i].fitness() for i in range(pop_size)]
+        scaled_fitness = (pop_fitness - np.min(pop_fitness)) / (np.max(pop_fitness) - np.min(pop_fitness))
+
+        print("Population fitness max = {}, Average fitness = {}".format(np.max(pop_fitness), np.mean(pop_fitness)))
+        max_model = population[np.argmax(pop_fitness)].model().save("Models-2/Model{}-{}".format(iters, np.max(pop_fitness)))
+
+        # Repopulate
+        new_population = []
+        # # Random weight mutation
+        # for i in range(pop_size):
+        #     new_population.append(Sim(KerasPickleWrapper(tensorflow.keras.models.clone_model(model))))
+
+        #     parents = np.random.choice(population, size=2, replace=False, p=scaled_fitness/np.sum(scaled_fitness))
+        #     weights1 = parents[0].model().get_weights()
+        #     weights2 = parents[1].model().get_weights()
+
+        #     new_weights = copy.deepcopy(weights1)
+
+        #     for j in range(len(new_weights)):
+        #         if len(new_weights[j].shape)==2:
+                    
+        #             for x in range(new_weights[j].shape[0]):
+        #                 for y in range(new_weights[j].shape[1]):
+        #                     val = np.random.choice([1,2,3], p=[0.497, 0.497, 0.006])
+        #                     if val == 1:
+        #                         new_weights[j][x][y] = weights1[j][x][y]
+        #                     elif val == 2:
+        #                         new_weights[j][x][y] = weights2[j][x][y]
+        #                     else:
+        #                         new_weights[j][x][y] = np.random.uniform()
+
+        #     new_population[-1].model().set_weights(new_weights)
+
+        # Certain amount of passed bots pull through then rest random
+        for i in range(bots_to_mate):
+            new_population.append(Sim(KerasPickleWrapper(tensorflow.keras.models.clone_model(model))))
+
+            parents = np.random.choice(population, size=2, replace=False, p=scaled_fitness/np.sum(scaled_fitness))
+            weights1 = parents[0].model().get_weights()
+            weights2 = parents[1].model().get_weights()
+
+            new_weights = copy.deepcopy(weights1)
+
+            for j in range(len(new_weights)):
+                if len(new_weights[j].shape)==2:
+                    
+                    for x in range(new_weights[j].shape[0]):
+                        for y in range(new_weights[j].shape[1]):
+                            val = np.random.choice([1,2], p=[0.5, 0.5])
+                            if val == 1:
+                                new_weights[j][x][y] = weights1[j][x][y]
+                            elif val == 2:
+                                new_weights[j][x][y] = weights2[j][x][y]
+
+            new_population[-1].model().set_weights(new_weights)
+
+        for i in range(pop_size - bots_to_mate):
+            new_population.append(Sim(KerasPickleWrapper(tensorflow.keras.models.clone_model(model))))
+
+        population = new_population
+
+
+
+
+
+
+
+## TODO: Log memory spread stuff
+if __name__ == '__main__':
+    freeze_support()
+    ga(10, 6, 100, 7)
+
+    # model = Sequential()
+    # model.add(Input(shape=(9)))
+    # model.add(Dense(9))
+    # model.add(Dense(4))
+
+    # print(model.get_weights())
+
+    # sims = []
+
+    # for i in range(20):
+    #     temp = KerasPickleWrapper(tensorflow.keras.models.clone_model(model))
+    #     sims.append(Sim(temp))
     
-    p = Pool(6)
-    out = p.map(Sim.run, sims)#,models)
+    # p = Pool(6)
+    # out = p.map(Sim.run, sims)#,models)
 
-    logs = [out[i].log for i in range(6)]
+    # # logs = [out[i].log for i in range(20)]
 
-    plot_sims(logs)
+    # # plot_sims(logs)
+    # for i in range(20):
+    #     print(out[i].fitness())
 
 
-    # tom = Sim(KerasPickleWrapper(model))
+    # tom = Sim(KerasPickleWrapper(keras.models.load_model('Models-1\Model7--237.26441643748748')))
     # tom.run(verbose=True)
+
+    # plot_sims([tom.log])

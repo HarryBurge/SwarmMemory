@@ -238,10 +238,10 @@ class Agent(object):
         to_ai = np.array([[apVSam, splt, total_agents_around, dupes_ratio, avgspace, dist_to_point, self.since_last[0], self.since_last[1], self.since_last[2]]])
 
 
-        # output = self.ai()(to_ai)
-        # argmax = np.argmax(output)
+        output = self.ai()(to_ai)
+        argmax = np.argmax(output)
 
-        argmax = np.random.randint(0,4)
+        # argmax = np.random.randint(0,4)
 
         if argmax == 0: #Do nothing
             pass

@@ -12,7 +12,7 @@ def dist(x1,y1,x2,y2):
 
 class Agent(object):
 
-    def __init__(self, sim, id, x, y, facing, model=None, con_radius=0.25, pub_mem_lim=10, pri_mem_lim=10):
+    def __init__(self, sim, id, x, y, facing, con_radius=0.25, pub_mem_lim=10, pri_mem_lim=10):
 
         self.sim = sim
         self.id = id
@@ -29,11 +29,10 @@ class Agent(object):
 
         self.mem_pc = 0
 
-        self.ai = model
-
         # Logging info
         self.track2 = np.zeros(2)
         self.since_last = np.zeros(3)
+        # self.agent_log = pd.DataFrame()
 
 
     def move(self, dangle, speed):
@@ -220,11 +219,12 @@ class Agent(object):
                     duplicates += 1
 
         dupes_ratio = 0
-        avgspace = self.pub_mem_lim - len(self.pub_mem)
+        ourspace = self.pub_mem_lim - len(self.pub_mem)
+        avgspace = 0
 
         if total_agents_around != 0:
             dupes_ratio = duplicates/total_agents_around
-            avgsapce = total_space_in_agent_mem/total_agents_around
+            avgspace = total_space_in_agent_mem/total_agents_around
 
         # Distance to data point
         dist_to_point = 0
@@ -235,10 +235,14 @@ class Agent(object):
         # Since last migration
         # Since last replication
 
-        to_ai = np.array([[apVSam, splt, total_agents_around, dupes_ratio, avgspace, dist_to_point, self.since_last[0], self.since_last[1], self.since_last[2]]])
+        to_ai = np.array([[apVSam, splt, total_agents_around, dupes_ratio, avgspace, ourspace, dist_to_point, self.since_last[0], self.since_last[1], self.since_last[2]]])
+        # self.agent_log = pd.concat([self.agent_log, pd.DataFrame(to_ai)], axis=0)
 
+        # if self.agent_log.shape[0]>5:
+            # self.agent_log = self.agent_log[1:]
 
-        output = self.ai()(to_ai)
+            # output = self.sim.model()(np.array(self.agent_log).reshape(-1, 5, 10))
+        output = self.sim.model()(to_ai)
         argmax = np.argmax(output)
 
         # argmax = np.random.randint(0,4)
@@ -254,6 +258,8 @@ class Agent(object):
         elif argmax == 3: #Migrate
             self.since_last[2] = 0
             pass
+        # else:
+        #     pass
 
 
         self.mem_pc += 1

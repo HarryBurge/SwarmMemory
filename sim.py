@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from pathos.multiprocessing import ProcessingPool as Pool
 from pathos.multiprocessing import freeze_support
-from keras.layers import Dense, Dropout, Input
+from keras.layers import Dense, Dropout, Input, LSTM
 from keras.models import Sequential
 import pygad.kerasga
 import matplotlib.pyplot as plt
@@ -21,6 +21,7 @@ import sys
 from scipy.ndimage.filters import gaussian_filter1d
 from textwrap import wrap
 import copy
+from datetime import datetime
 os.environ["CUDA_VISIBLE_DEVICES"]="-1" 
 # np.set_printoptions(threshold=sys.maxsize)
 
@@ -31,6 +32,7 @@ class Sim:
 
         self.agents = []
         self.log = [None]*10000
+        # self.agent_logs = pd.DataFrame() # For debug
 
         for i in range(agents):
             self.agents.append(Agent(self, i, np.random.uniform(-0.7, 0.7), np.random.uniform(-0.7, 0.7), np.random.uniform(0, 2*np.pi)))
@@ -43,12 +45,12 @@ class Sim:
         self.model = model
 
 
-    def run(self, model=None, runtime=500, non_cor_chance = 0.003, cor_when = None, verbose = False):
+    def run(self, model=None, runtime=5000, non_cor_chance = 0.006, cor_when = None, verbose = False):
         
         # for i in self.agents:
         #     i.ai = model
-        for i in self.agents:
-            i.ai = self.model
+        # for i in self.agents:
+        #     i.ai = self.model
 
 
         for iteration in range(runtime):
@@ -77,8 +79,11 @@ class Sim:
             dists = np.zeros((9, len(self.agents)))
             ratio_total = np.ones((21,21))
             ratio_dupes = np.zeros((9,21,21))
+            mem_spread = np.zeros(len(self.agents))
 
             for ind, i in enumerate(self.agents):
+
+                mem_spread[ind] = i.pub_mem_lim - len(i.pub_mem)
 
                 for j in np.arange(9):
 
@@ -99,7 +104,7 @@ class Sim:
 
                     # print(ratio_dupes[j][tmp_x][tmp_y], tmp_x, tmp_y)
 
-            self.log[iteration] = np.array([nagents, dupes, dists, ratio_dupes/ratio_total, stability])
+            self.log[iteration] = np.array([nagents, dupes, dists, ratio_dupes/ratio_total, stability, mem_spread])
 
         return self
 
@@ -113,6 +118,7 @@ class Sim:
         sum_of_stab = 0
         distmax_min = 0
         num_of_it = 0
+        memspread = 0
 
         for iteration in np.arange(len(self.log)):
             if type(self.log[iteration]) != type(None):
@@ -120,8 +126,9 @@ class Sim:
                 se_of_dupes = se_of_dupes - np.power(np.mean(self.log[iteration][1]) - self.log[iteration][0], 2)
                 sum_of_stab = sum_of_stab - np.mean(self.log[iteration][4])
                 distmax_min = distmax_min + np.mean(np.power(np.max(self.log[iteration][2]) - np.min(self.log[iteration][2]), 2))
+                memspread = memspread - np.std(self.log[iteration][5])
 
-        return (se_of_dupes + sum_of_stab*100 + distmax_min*100)/num_of_it
+        return (se_of_dupes + sum_of_stab*100 + distmax_min*100 + memspread*100)/num_of_it
 
 
 
@@ -133,6 +140,7 @@ def plot_sims(logs):
     ratios = np.zeros((9, 21, 21))
     dists = np.zeros((len(logs), 10000, 9, 50))
     stab = np.zeros((len(logs), 10000, 9))
+    spread = np.zeros((len(logs), 10000, 50))
 
     for ind, run in enumerate(logs):
         for i in np.arange(10000):
@@ -146,6 +154,7 @@ def plot_sims(logs):
 
                 ratios = ratios + run[i][3]
                 stab[ind, i] = stab[ind, i] + run[i][4]
+                spread[ind, i] = spread[ind, i] + run[i][5]
 
             else:
                 break
@@ -215,13 +224,13 @@ def plot_sims(logs):
         fig_dists[ind].plot(j, i, 'ro')
 
     # # Spread
-    # line = f3_ax5.fill_between( iterations, gaussian_filter1d(np.max(spread, axis=1).astype(float), sigma=50), gaussian_filter1d(np.min(spread, axis=1).astype(float), sigma=50), alpha=0.5 )
-    # line.set_color('orange')
+    line = f3_ax5.fill_between( iterations, gaussian_filter1d(10-np.max(np.max(spread, axis=0),axis=1), sigma=50), gaussian_filter1d(10-np.min(np.min(spread, axis=0),axis=1), sigma=50), alpha=0.5 )
+    line.set_color('orange')
 
-    # line = f3_ax5.fill_between( iterations, gaussian_filter1d(np.mean(spread, axis=1)+np.std(spread, axis=1), sigma=50), gaussian_filter1d(np.mean(spread, axis=1)-np.std(spread, axis=1), sigma=50), alpha=0.5 )
-    # line.set_color('green')
+    line = f3_ax5.fill_between( iterations, gaussian_filter1d(10-(np.mean(np.mean(spread, axis=0),axis=1)+np.std(np.mean(spread, axis=0),axis=1)), sigma=50), gaussian_filter1d(10-(np.mean(np.mean(spread, axis=0),axis=1)-np.std(np.mean(spread, axis=0),axis=1)), sigma=50), alpha=0.5 )
+    line.set_color('green')
 
-    # f3_ax5.plot(iterations, gaussian_filter1d(np.mean(spread, axis=1), sigma=50))
+    f3_ax5.plot(iterations, gaussian_filter1d(10-np.mean(np.mean(spread, axis=0),axis=1), sigma=50))
 
 
     
@@ -266,8 +275,10 @@ def plot_sims(logs):
 
 def ga(pop_size, parrellel_size, iterations, bots_to_mate):
     model = Sequential()
-    model.add(Input(shape=(9)))
-    model.add(Dense(9))
+    model.add(Input(shape=(5, 10)))
+    # model.add(LSTM(7, return_sequences=False))
+    # model.add(Dense(5))
+    model.add(Dense(7))
     model.add(Dense(4))
 
 
@@ -287,7 +298,7 @@ def ga(pop_size, parrellel_size, iterations, bots_to_mate):
         scaled_fitness = (pop_fitness - np.min(pop_fitness)) / (np.max(pop_fitness) - np.min(pop_fitness))
 
         print("Population fitness max = {}, Average fitness = {}".format(np.max(pop_fitness), np.mean(pop_fitness)))
-        max_model = population[np.argmax(pop_fitness)].model().save("Models-2/Model{}-{}".format(iters, np.max(pop_fitness)))
+        max_model = population[np.argmax(pop_fitness)].model().save("Model_Test1/Model{}-{}".format(iters, np.max(pop_fitness)))
 
         # Repopulate
         new_population = []
@@ -353,32 +364,66 @@ def ga(pop_size, parrellel_size, iterations, bots_to_mate):
 ## TODO: Log memory spread stuff
 if __name__ == '__main__':
     freeze_support()
-    ga(10, 6, 100, 7)
+    print(f"Start time {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
+    ga(60, 12, 1, 50)
+    print(f"End time {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
 
     # model = Sequential()
-    # model.add(Input(shape=(9)))
-    # model.add(Dense(9))
+    # model.add(Input(shape=(5, 10)))
+    # model.add(LSTM(7, return_sequences=False))
+    # model.add(Dense(5))
     # model.add(Dense(4))
 
-    # print(model.get_weights())
+    # # # # print(model.get_weights())
 
     # sims = []
 
-    # for i in range(20):
-    #     temp = KerasPickleWrapper(tensorflow.keras.models.clone_model(model))
+    # for i in range(10):
+    #     # temp = KerasPickleWrapper(tensorflow.keras.models.clone_model(model))
+    #     temp = KerasPickleWrapper(model)
     #     sims.append(Sim(temp))
     
-    # p = Pool(6)
+    # p = Pool(10)
     # out = p.map(Sim.run, sims)#,models)
 
-    # # logs = [out[i].log for i in range(20)]
+    # logs = [out[i].log for i in range(10)]
 
-    # # plot_sims(logs)
+    # plot_sims(logs)
     # for i in range(20):
     #     print(out[i].fitness())
 
 
-    # tom = Sim(KerasPickleWrapper(keras.models.load_model('Models-1\Model7--237.26441643748748')))
+    # tom = Sim(KerasPickleWrapper(model))
     # tom.run(verbose=True)
 
     # plot_sims([tom.log])
+
+    # def custom_loss(y_true, y_pred):
+    #     print(y_true)
+    #     return y_true
+
+    # model.compile(
+    #     loss=custom_loss, 
+    #     optimizer='adam'
+    #     )
+
+    # print(np.array(out[0].agent_logs))
+    # print(out[0].fitness())
+
+    # y_loss = np.zeros(np.array(out[0].agent_logs).shape[0])*out[0].fitness()
+
+    # model.fit(
+    #     x=np.array(out[0].agent_logs), 
+    #     y=y_loss, 
+    #     batch_size=10, 
+    #     epochs=2, 
+    #     verbose=1
+    #     )
+
+
+
+    
+
+
+        
+

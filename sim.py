@@ -4,25 +4,21 @@ import numpy as np
 import pandas as pd
 from pathos.multiprocessing import ProcessingPool as Pool
 from pathos.multiprocessing import freeze_support
-from keras.layers import Dense, Dropout, Input, LSTM
-from keras.models import Sequential
+from tensorflow.keras.layers import Dense, Dropout, Input, LSTM
+from tensorflow.keras.models import Sequential
 import matplotlib.pyplot as plt
 import pickle
-import types
-import tempfile
 import keras.models
 import tensorflow
 from keras_pickle_wrapper import KerasPickleWrapper
 import os
 import agent
-import sys
 from scipy.ndimage.filters import gaussian_filter1d
 from textwrap import wrap
 import copy
 from datetime import datetime
 os.environ["CUDA_VISIBLE_DEVICES"]="-1"
 tensorflow.compat.v1.logging.set_verbosity(tensorflow.compat.v1.logging.ERROR)
-# np.set_printoptions(threshold=sys.maxsize)
 
 
 class Sim:
@@ -44,7 +40,7 @@ class Sim:
         self.model = model
 
 
-    def run(self, model=None, runtime=1000, non_cor_chance = 0.006, cor_when = None, verbose = False):
+    def run(self, model=None, runtime=1000, non_cor_chance = 0.006, cor_when = None, verbose = True):
         
         # for i in self.agents:
         #     i.ai = model

@@ -6,9 +6,7 @@ from pathos.multiprocessing import ProcessingPool as Pool
 from pathos.multiprocessing import freeze_support
 from keras.layers import Dense, Dropout, Input, LSTM
 from keras.models import Sequential
-import pygad.kerasga
 import matplotlib.pyplot as plt
-from joblib import Parallel, delayed
 import pickle
 import types
 import tempfile
@@ -22,7 +20,8 @@ from scipy.ndimage.filters import gaussian_filter1d
 from textwrap import wrap
 import copy
 from datetime import datetime
-os.environ["CUDA_VISIBLE_DEVICES"]="-1" 
+os.environ["CUDA_VISIBLE_DEVICES"]="-1"
+tensorflow.compat.v1.logging.set_verbosity(tensorflow.compat.v1.logging.ERROR)
 # np.set_printoptions(threshold=sys.maxsize)
 
 
@@ -45,7 +44,7 @@ class Sim:
         self.model = model
 
 
-    def run(self, model=None, runtime=5000, non_cor_chance = 0.006, cor_when = None, verbose = False):
+    def run(self, model=None, runtime=1000, non_cor_chance = 0.006, cor_when = None, verbose = False):
         
         # for i in self.agents:
         #     i.ai = model
@@ -125,8 +124,13 @@ class Sim:
                 num_of_it += 1
                 se_of_dupes = se_of_dupes - np.power(np.mean(self.log[iteration][1]) - self.log[iteration][0], 2)
                 sum_of_stab = sum_of_stab - np.mean(self.log[iteration][4])
-                distmax_min = distmax_min + np.mean(np.power(np.max(self.log[iteration][2]) - np.min(self.log[iteration][2]), 2))
-                memspread = memspread - np.std(self.log[iteration][5])
+
+                # If no agents then will error therefore just don't add it
+                try:
+                    distmax_min = distmax_min + np.mean(np.power(np.max(self.log[iteration][2]) - np.min(self.log[iteration][2]), 2))
+                    memspread = memspread - np.std(self.log[iteration][5])
+                except ValueError:
+                    pass
 
         return (se_of_dupes + sum_of_stab*100 + distmax_min*100 + memspread*100)/num_of_it
 
@@ -365,60 +369,8 @@ def ga(pop_size, parrellel_size, iterations, bots_to_mate):
 if __name__ == '__main__':
     freeze_support()
     print(f"Start time {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
-    ga(60, 12, 1, 50)
+    ga(24, 12, 20, 20)
     print(f"End time {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
-
-    # model = Sequential()
-    # model.add(Input(shape=(5, 10)))
-    # model.add(LSTM(7, return_sequences=False))
-    # model.add(Dense(5))
-    # model.add(Dense(4))
-
-    # # # # print(model.get_weights())
-
-    # sims = []
-
-    # for i in range(10):
-    #     # temp = KerasPickleWrapper(tensorflow.keras.models.clone_model(model))
-    #     temp = KerasPickleWrapper(model)
-    #     sims.append(Sim(temp))
-    
-    # p = Pool(10)
-    # out = p.map(Sim.run, sims)#,models)
-
-    # logs = [out[i].log for i in range(10)]
-
-    # plot_sims(logs)
-    # for i in range(20):
-    #     print(out[i].fitness())
-
-
-    # tom = Sim(KerasPickleWrapper(model))
-    # tom.run(verbose=True)
-
-    # plot_sims([tom.log])
-
-    # def custom_loss(y_true, y_pred):
-    #     print(y_true)
-    #     return y_true
-
-    # model.compile(
-    #     loss=custom_loss, 
-    #     optimizer='adam'
-    #     )
-
-    # print(np.array(out[0].agent_logs))
-    # print(out[0].fitness())
-
-    # y_loss = np.zeros(np.array(out[0].agent_logs).shape[0])*out[0].fitness()
-
-    # model.fit(
-    #     x=np.array(out[0].agent_logs), 
-    #     y=y_loss, 
-    #     batch_size=10, 
-    #     epochs=2, 
-    #     verbose=1
-    #     )
 
 
 

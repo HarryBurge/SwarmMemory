@@ -40,7 +40,7 @@ class Sim:
         self.model = model
 
 
-    def run(self, model=None, runtime=1000, non_cor_chance = 0.006, cor_when = None, verbose = True):
+    def run(self, model=None, runtime=10000, non_cor_chance = 0.003, cor_when = None, verbose = True):
         
         # for i in self.agents:
         #     i.ai = model
@@ -74,7 +74,7 @@ class Sim:
             dists = np.zeros((9, len(self.agents)))
             ratio_total = np.ones((21,21))
             ratio_dupes = np.zeros((9,21,21))
-            mem_spread = np.zeros(len(self.agents))
+            mem_spread = np.zeros(50)
 
             for ind, i in enumerate(self.agents):
 
@@ -224,13 +224,13 @@ def plot_sims(logs):
         fig_dists[ind].plot(j, i, 'ro')
 
     # # Spread
-    line = f3_ax5.fill_between( iterations, gaussian_filter1d(10-np.max(np.max(spread, axis=0),axis=1), sigma=50), gaussian_filter1d(10-np.min(np.min(spread, axis=0),axis=1), sigma=50), alpha=0.5 )
+    line = f3_ax5.fill_between( iterations, gaussian_filter1d(np.max(np.max(spread, axis=0),axis=1), sigma=50), gaussian_filter1d(np.min(np.min(spread, axis=0),axis=1), sigma=50), alpha=0.5 )
     line.set_color('orange')
 
-    line = f3_ax5.fill_between( iterations, gaussian_filter1d(10-(np.mean(np.mean(spread, axis=0),axis=1)+np.std(np.mean(spread, axis=0),axis=1)), sigma=50), gaussian_filter1d(10-(np.mean(np.mean(spread, axis=0),axis=1)-np.std(np.mean(spread, axis=0),axis=1)), sigma=50), alpha=0.5 )
+    line = f3_ax5.fill_between( iterations, gaussian_filter1d((np.mean(np.mean(spread, axis=0),axis=1)+np.std(np.mean(spread, axis=0),axis=1)), sigma=50), gaussian_filter1d((np.mean(np.mean(spread, axis=0),axis=1)-np.std(np.mean(spread, axis=0),axis=1)), sigma=50), alpha=0.5 )
     line.set_color('green')
 
-    f3_ax5.plot(iterations, gaussian_filter1d(10-np.mean(np.mean(spread, axis=0),axis=1), sigma=50))
+    f3_ax5.plot(iterations, gaussian_filter1d(np.mean(np.mean(spread, axis=0),axis=1), sigma=50))
 
 
     
@@ -361,17 +361,25 @@ def ga(pop_size, parrellel_size, iterations, bots_to_mate):
 
 
 
-## TODO: Log memory spread stuff
+# TODO: Log memory spread stuff
 if __name__ == '__main__':
     freeze_support()
     print(f"Start time {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
-    ga(24, 12, 20, 20)
+    # ga(24, 12, 20, 20)
+
+    models_to_test = ['Model7-73.05134716980395',
+                        'Model7-73.05134716980395',
+                        'Model7-73.05134716980395',
+                        'Model7-73.05134716980395',
+                        'Model7-73.05134716980395',
+                        'Model7-73.05134716980395',
+                        'Model7-73.05134716980395',
+                        'Model7-73.05134716980395',
+                        'Model7-73.05134716980395',
+                        'Model7-73.05134716980395']
+
+    population = [Sim(KerasPickleWrapper(tensorflow.keras.models.load_model('Models_GA_static_move/' + x))) for x in models_to_test]
+
+    p = Pool(10)
+    out = p.map(Sim.run, population)
     print(f"End time {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
-
-
-
-    
-
-
-        
-

@@ -40,7 +40,7 @@ class Sim:
         self.model = model
 
 
-    def run(self, model=None, runtime=10000, non_cor_chance = 0.003, cor_when = None, verbose = True):
+    def run(self, model=None, runtime=5000, non_cor_chance = 0.003, cor_when = None, verbose = False):
         
         # for i in self.agents:
         #     i.ai = model
@@ -118,7 +118,7 @@ class Sim:
         for iteration in np.arange(len(self.log)):
             if type(self.log[iteration]) != type(None):
                 num_of_it += 1
-                se_of_dupes = se_of_dupes - np.power(np.mean(self.log[iteration][1]) - self.log[iteration][0], 2)
+                se_of_dupes = se_of_dupes - np.power(np.mean(self.log[iteration][1]) - (self.log[iteration][0]*0.25), 2)
                 sum_of_stab = sum_of_stab - np.mean(self.log[iteration][4])
 
                 # If no agents then will error therefore just don't add it
@@ -298,7 +298,7 @@ def ga(pop_size, parrellel_size, iterations, bots_to_mate):
         scaled_fitness = (pop_fitness - np.min(pop_fitness)) / (np.max(pop_fitness) - np.min(pop_fitness))
 
         print("Population fitness max = {}, Average fitness = {}".format(np.max(pop_fitness), np.mean(pop_fitness)))
-        max_model = population[np.argmax(pop_fitness)].model().save("Model_Test1/Model{}-{}".format(iters, np.max(pop_fitness)))
+        max_model = population[np.argmax(pop_fitness)].model().save("Model_Test2/Model{}-{}".format(iters, np.max(pop_fitness)))
 
         # Repopulate
         new_population = []
@@ -365,21 +365,21 @@ def ga(pop_size, parrellel_size, iterations, bots_to_mate):
 if __name__ == '__main__':
     freeze_support()
     print(f"Start time {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
-    # ga(24, 12, 20, 20)
+    ga(80, 40, 150, 70)
 
-    models_to_test = ['Model7-73.05134716980395',
-                        'Model7-73.05134716980395',
-                        'Model7-73.05134716980395',
-                        'Model7-73.05134716980395',
-                        'Model7-73.05134716980395',
-                        'Model7-73.05134716980395',
-                        'Model7-73.05134716980395',
-                        'Model7-73.05134716980395',
-                        'Model7-73.05134716980395',
-                        'Model7-73.05134716980395']
+    # models_to_test = ['Model7-73.05134716980395',
+    #                     'Model7-73.05134716980395',
+    #                     'Model7-73.05134716980395',
+    #                     'Model7-73.05134716980395',
+    #                     'Model7-73.05134716980395',
+    #                     'Model7-73.05134716980395',
+    #                     'Model7-73.05134716980395',
+    #                     'Model7-73.05134716980395',
+    #                     'Model7-73.05134716980395',
+    #                     'Model7-73.05134716980395']
 
-    population = [Sim(KerasPickleWrapper(tensorflow.keras.models.load_model('Models_GA_static_move/' + x))) for x in models_to_test]
+    # population = [Sim(KerasPickleWrapper(tensorflow.keras.models.load_model('Models_GA_static_move/' + x))) for x in models_to_test]
 
-    p = Pool(10)
-    out = p.map(Sim.run, population)
+    # p = Pool(10)
+    # out = p.map(Sim.run, population)
     print(f"End time {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")

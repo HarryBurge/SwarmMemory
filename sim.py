@@ -2,6 +2,8 @@ from agent import Agent
 from data import Data
 import numpy as np
 import pandas as pd
+import warnings
+warnings.filterwarnings("ignore")
 from pathos.multiprocessing import ProcessingPool as Pool
 from pathos.multiprocessing import freeze_support
 from tensorflow.keras.layers import Dense, Dropout, Input, LSTM
@@ -40,13 +42,13 @@ class Sim:
         self.model = model
 
 
-    def run(self, model=None, runtime=5000, non_cor_chance = 0.003, cor_when = None, verbose = False):
+    def run(self, model=None, runtime=5000, non_cor_chance = 0.003, cor_when = None, verbose = True):
         
-        # for i in self.agents:
-        #     i.ai = model
+        for i in self.agents:
+            i.ai = keras.models.clone_model(self.model())
+            i.ai.set_weights(self.model().get_weights())
         # for i in self.agents:
         #     i.ai = self.model
-
 
         for iteration in range(runtime):
 
@@ -275,11 +277,10 @@ def plot_sims(logs):
 
 def ga(pop_size, parrellel_size, iterations, bots_to_mate):
     model = Sequential()
-    model.add(Input(shape=(5, 10)))
-    # model.add(LSTM(7, return_sequences=False))
-    # model.add(Dense(5))
-    model.add(Dense(7))
-    model.add(Dense(4))
+    model.add(Input(shape=(1, 8)))
+    model.add(LSTM(8, return_sequences=False))
+    model.add(Dense(6))
+    model.add(Dense(3))
 
 
     # Inital population
@@ -298,7 +299,7 @@ def ga(pop_size, parrellel_size, iterations, bots_to_mate):
         scaled_fitness = (pop_fitness - np.min(pop_fitness)) / (np.max(pop_fitness) - np.min(pop_fitness))
 
         print("Population fitness max = {}, Average fitness = {}".format(np.max(pop_fitness), np.mean(pop_fitness)))
-        max_model = population[np.argmax(pop_fitness)].model().save("Model_Test2/Model{}-{}".format(iters, np.max(pop_fitness)))
+        max_model = population[np.argmax(pop_fitness)].model().save("Model_Test3/Model{}-{}".format(iters, np.max(pop_fitness)))
 
         # Repopulate
         new_population = []
@@ -365,20 +366,21 @@ def ga(pop_size, parrellel_size, iterations, bots_to_mate):
 if __name__ == '__main__':
     freeze_support()
     print(f"Start time {datetime.now().strftime('%d/%m/%Y %H:%M:%S')}")
-    ga(80, 40, 150, 70)
+    # ga(80, 40, 150, 70)
+    ga(40, 40, 400, 35)
 
-    # models_to_test = ['Model7-73.05134716980395',
-    #                     'Model7-73.05134716980395',
-    #                     'Model7-73.05134716980395',
-    #                     'Model7-73.05134716980395',
-    #                     'Model7-73.05134716980395',
-    #                     'Model7-73.05134716980395',
-    #                     'Model7-73.05134716980395',
-    #                     'Model7-73.05134716980395',
-    #                     'Model7-73.05134716980395',
-    #                     'Model7-73.05134716980395']
+    # models_to_test = ['NewModel/Model7--358.02085777944694',
+    #                     'NewModel/Model21--355.1014352298069',
+    #                     'NewModel/Model22--357.14626085910095',
+    #                     'NewModel/Model57--304.63676685907944',
+    #                     'NewModel/Model54--378.4507402759427',
+    #                     'NewModel/Model46--373.82108062809215',
+    #                     'NewModel/Model41--376.22540354163965',
+    #                     'NewModel/Model44--386.45412164397527',
+    #                     'NewModel/Model26--380.915493184258',
+    #                     'NewModel/Model40--367.0117638763163']
 
-    # population = [Sim(KerasPickleWrapper(tensorflow.keras.models.load_model('Models_GA_static_move/' + x))) for x in models_to_test]
+    # population = [Sim(KerasPickleWrapper(tensorflow.keras.models.load_model(x))) for x in models_to_test]
 
     # p = Pool(10)
     # out = p.map(Sim.run, population)

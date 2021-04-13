@@ -28,6 +28,7 @@ class Agent(object):
         self.pri_mem_lim = pri_mem_lim
 
         self.mem_pc = 0
+        self.ai = None
 
         # Logging info
         self.track2 = np.zeros(2)
@@ -198,9 +199,6 @@ class Agent(object):
         if self.track2[1] != 0:
             apVSam = self.track2[0]/self.track2[1]
 
-        # Space left in public memory
-        splt = self.pub_mem_lim - len(self.pub_mem)
-
         # Duplication ratio
         # Amount of agents around
         # Average space in other agents mems
@@ -231,42 +229,46 @@ class Agent(object):
         if len(self.pub_mem) > 0:
             dist_to_point = dist(self.x, self.y, self.pub_mem[self.mem_pc].x, self.pub_mem[self.mem_pc].y)
 
+        space_ratio = 0
+        if avgspace != 0:
+            space_ratio = ourspace/avgspace
+
         # Since last suicide
         # Since last migration
         # Since last replication
 
-        to_ai = np.array([[apVSam, splt, total_agents_around, dupes_ratio, avgspace, ourspace, dist_to_point, self.since_last[0], self.since_last[1], self.since_last[2]]])
+        to_ai = np.array([[apVSam, total_agents_around/50, dupes_ratio, space_ratio, dist_to_point/np.sqrt(8), self.since_last[0]/10000, self.since_last[1]/10000, self.since_last[2]/10000]])
         # self.agent_log = pd.concat([self.agent_log, pd.DataFrame(to_ai)], axis=0)
 
         # if self.agent_log.shape[0]>5:
             # self.agent_log = self.agent_log[1:]
 
             # output = self.sim.model()(np.array(self.agent_log).reshape(-1, 5, 10))
-        output = self.sim.model()(to_ai)
+        output = self.ai(to_ai.reshape(-1, 1, 8))
         argmax = np.argmax(output)
 
-        # argmax = np.random.randint(0,4)
+        # 0.01
 
-        if argmax == 0: #Do nothing
-            pass
-        elif argmax == 1 and len(self.pub_mem) != 0: #Replicate
-            self.message(Packet(2, self.id, -1, data=self.pub_mem[self.mem_pc]))
-            self.since_last[0] = 0
-        elif argmax == 2 and len(self.pub_mem) != 0: #Suicide
-            self.since_last[1] = 0
-            self.remove_data_mem(self.pub_mem[self.mem_pc].id, 'pub')
-        elif argmax == 3: #Migrate
-            self.since_last[2] = 0
-            pass
-        # else:
+        # if argmax == 0: #Do nothing
         #     pass
+        if output.numpy()[0][argmax] > 0.05:
+            if argmax == 0 and len(self.pub_mem) != 0: #Replicate
+                self.message(Packet(2, self.id, -1, data=self.pub_mem[self.mem_pc]))
+                self.since_last[0] = 0
+            elif argmax == 1 and len(self.pub_mem) != 0: #Suicide
+                self.since_last[1] = 0
+                self.remove_data_mem(self.pub_mem[self.mem_pc].id, 'pub')
+            elif argmax == 2: #Migrate
+                self.since_last[2] = 0
+                pass
 
 
         self.mem_pc += 1
         if self.mem_pc >= len(self.pub_mem):
             self.mem_pc = 0
 
-        self.track2 = self.track2*0.8
+        # self.track2 = self.track2*0.8
+        self.track2 = np.zeros(2)
         self.since_last += 1
 
         # if self.id == 0:
